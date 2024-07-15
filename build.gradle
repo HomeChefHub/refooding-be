@@ -37,7 +37,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 
 	// api doc
-	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
