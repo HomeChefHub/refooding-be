@@ -1,4 +1,4 @@
-package refooding.api.domain.common;
+package refooding.api.common.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
