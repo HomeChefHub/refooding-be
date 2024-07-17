@@ -23,7 +23,7 @@ public class Exchange extends BaseTimeEntity {
     private ExchangeStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
     // @ManyToOne
