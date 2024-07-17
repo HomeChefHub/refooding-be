@@ -1,4 +1,5 @@
-package refooding.api.domain.exchange.entity;
+package refooding.api.domain.exchange;
 
 public enum ExchangeStatus {
+    ACTIVE, TRADED
 }
