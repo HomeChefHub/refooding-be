@@ -10,7 +10,6 @@ public class Manual extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "manual_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

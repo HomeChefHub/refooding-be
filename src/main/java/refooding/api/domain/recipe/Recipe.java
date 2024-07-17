@@ -13,7 +13,6 @@ public class Recipe extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_id")
     private Long id;
 
     private String name;

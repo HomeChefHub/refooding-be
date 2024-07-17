@@ -10,7 +10,6 @@ public class RecipeIngredient extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_ingredient_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
