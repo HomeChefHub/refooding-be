@@ -2,7 +2,7 @@ package refooding.api.domain.exchange;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import refooding.api.domain.common.BaseTimeEntity;
+import refooding.api.common.domain.BaseTimeEntity;
 
 @Entity
 @Getter
@@ -23,7 +23,7 @@ public class Exchange extends BaseTimeEntity {
     private ExchangeStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
     // @ManyToOne

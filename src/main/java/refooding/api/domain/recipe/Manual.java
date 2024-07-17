@@ -2,7 +2,7 @@ package refooding.api.domain.recipe;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import refooding.api.domain.common.BaseTimeEntity;
+import refooding.api.common.domain.BaseTimeEntity;
 
 @Entity
 @Getter
