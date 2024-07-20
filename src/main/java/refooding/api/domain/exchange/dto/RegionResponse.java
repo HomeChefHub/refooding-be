@@ -6,25 +6,22 @@ import lombok.Getter;
 import refooding.api.domain.exchange.entity.Region;
 
 import java.util.List;
-
+@Getter
+@AllArgsConstructor
 public class RegionResponse{
 
-    @Getter
-    @AllArgsConstructor
-    public static class ParentRegionResponse{
-        private Long id;
-        private String name;
-        private List<ChildRegion> childRegions;
+    private Long id;
+    private String name;
+    private List<ChildRegion> childRegions;
 
-        public static ParentRegionResponse from(Region region){
-            return new ParentRegionResponse(
-                    region.getId(),
-                    region.getName(),
-                    region.getChildren().stream()
-                            .map(ChildRegion::from)
-                            .toList()
-            );
-        }
+    public static RegionResponse from(Region region){
+        return new RegionResponse(
+                region.getId(),
+                region.getName(),
+                region.getChildren().stream()
+                        .map(ChildRegion::from)
+                        .toList()
+        );
     }
 
     @Getter
