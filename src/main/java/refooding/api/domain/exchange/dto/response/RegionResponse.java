@@ -1,4 +1,4 @@
-package refooding.api.domain.exchange.dto;
+package refooding.api.domain.exchange.dto.response;
 
 
 import lombok.AllArgsConstructor;

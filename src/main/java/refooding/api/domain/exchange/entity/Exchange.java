@@ -29,15 +29,19 @@ public class Exchange extends BaseTimeEntity {
     @JoinColumn(name = "region_id", nullable = false)
     private Region region;
 
+    // TODO : 회원 추가
     // @ManyToOne
     // @JoinColumn(name = "id")
     // private Member member;
-
 
     public Exchange(String title, String content, Region region) {
         this.title = title;
         this.content = content;
         this.status = ExchangeStatus.ACTIVE;
+        this.region = region;
+    }
+
+    public void updateRegion(Region region) {
         this.region = region;
     }
 }

@@ -3,7 +3,7 @@ package refooding.api.domain.exchange.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import refooding.api.domain.exchange.dto.RegionResponse;
+import refooding.api.domain.exchange.dto.response.RegionResponse;
 import refooding.api.domain.exchange.entity.Region;
 import refooding.api.domain.exchange.repository.RegionRepository;
 
