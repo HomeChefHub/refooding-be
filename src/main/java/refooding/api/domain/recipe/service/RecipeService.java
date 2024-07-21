@@ -24,11 +24,6 @@ public class RecipeService {
 
     public List<RecipeResponse> getRecipes() {
         List<Recipe> allRecipes = recipeRepository.findAll();
-        for (Recipe allRecipe : allRecipes) {
-            System.out.println(allRecipe.getId());
-            System.out.println(allRecipe.getName());
-            System.out.println(allRecipe.getMainImgSrc());
-        }
 
         // DTO 변환
         return allRecipes.stream()
@@ -46,20 +41,33 @@ public class RecipeService {
                 .orElse(null); // Recipe가 존재하지 않으면 null 반환
 
     }
-//
-//    // 생각해보니까 Recipe엔티티에 주재료명을 저장하는게 낫겠다.
-//    // 그러면 주재료를 통해 Recipe를 쉽게 검색 가능하니까.
-//    public List<RecipeResponse> getRecipesByIngredientName(String ingredientName) {
-//        List<Recipe> findRecipes = recipeRepository.findByMainIngredientName(ingredientName).orElse(Collections.emptyList());
-//    }
-//
-//    public List<RecipeResponse> getRecipesByRecipeName(String recipeName) {
-//        List<Recipe> findRecipes = recipeRepository.findByNameContaining(recipeName).orElse(Collections.emptyList());
-//
-//        // DTO 변환
-//
-//    }
 
+    public List<RecipeResponse> getRecipesByIngredientName(String ingredientName) {
+        List<Recipe> findRecipes = recipeRepository.findByMainIngredientName(ingredientName).orElse(Collections.emptyList());
+
+        // DTO 변환
+        return findRecipes.stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .toList();
+    }
+//
+    public List<RecipeResponse> getRecipesByRecipeName(String recipeName) {
+        List<Recipe> findRecipes = recipeRepository.findByNameContaining(recipeName).orElse(Collections.emptyList());
+
+        // DTO 변환
+        return findRecipes.stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .toList();
+
+    }
 
     private RecipeDetailResponse convertToRecipeDetailResponse(Recipe recipe) {
         List<ManualResponse> manualResponseList = recipe.getManualList().stream()

@@ -33,9 +33,21 @@ public class RecipeController {
                     )
             }
     )
-    public ResponseEntity<List<RecipeResponse>> getRecipes() {
-        List<RecipeResponse> response = recipeService.getRecipes();
-        return ResponseEntity.ok(response);
+    public ResponseEntity<List<RecipeResponse>> getRecipes(@RequestParam(required = false) String ingredientName,
+                                                           @RequestParam(required = false) String recipeName) {
+
+        if (ingredientName != null) { // 주 재료명으로 조회하는 경우
+            List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
+            return ResponseEntity.ok(response);
+        }
+        if (recipeName != null) { // 레시피명으로 조회하는 경우
+            List<RecipeResponse> response = recipeService.getRecipesByRecipeName(recipeName);
+            return ResponseEntity.ok(response);
+        }
+        else { // 전체 조회
+            List<RecipeResponse> response = recipeService.getRecipes();
+            return ResponseEntity.ok(response);
+        }
     }
 
     @GetMapping("/{recipeId}")
@@ -53,24 +65,24 @@ public class RecipeController {
         RecipeDetailResponse response = recipeService.getRecipeDetailById(recipeId);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/search")
+    @Operation(
+            summary = " 주재료 이름으로 레시피 목록 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "레시피 목록 조회 성공",
+                            content = @Content(schema = @Schema(implementation = RecipeResponse.class))
+                    )
+            }
+    )
+    public ResponseEntity<List<RecipeResponse>> getRecipesByIngredientName(@RequestParam String ingredientName) {
+        List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
+        return ResponseEntity.ok(response);
+    }
 //
-//    @GetMapping()
-//    @Operation(
-//            summary = " 주재료 이름으로 레시피 목록 조회",
-//            responses = {
-//                    @ApiResponse(
-//                            responseCode = "200",
-//                            description = "레시피 목록 조회 성공",
-//                            content = @Content(schema = @Schema(implementation = RecipeResponse.class))
-//                    )
-//            }
-//    )
-//    public ResponseEntity<List<RecipeResponse>> getRecipesByIngredientName(@RequestParam String ingredientName) {
-//        List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
-//        return ResponseEntity.ok(response);
-//    }
-//
-//    @GetMapping()
+//    @GetMapping("/search)
 //    @Operation(
 //            summary = "레시피 이름으로 레시피 목록 조회",
 //            responses = {
