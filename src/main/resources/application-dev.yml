@@ -13,6 +13,22 @@ spring:
         format_sql: true
         show_sql: true
 
+# swagger
+springdoc:
+  api-docs:
+    path: /api-docs # API 문서 생성 경로
+  swagger-ui:
+    path: /index.html # Swagger-ui 경로
+    groups-order: asc
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+  cache:
+    disabled: true
+  override-with-generic-response: false
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+
 logging:
   level:
     org.hibernate.orm.jdbc.bind: debug
