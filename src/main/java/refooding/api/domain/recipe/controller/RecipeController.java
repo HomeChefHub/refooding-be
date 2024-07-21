@@ -81,21 +81,5 @@ public class RecipeController {
         List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
         return ResponseEntity.ok(response);
     }
-//
-//    @GetMapping("/search)
-//    @Operation(
-//            summary = "레시피 이름으로 레시피 목록 조회",
-//            responses = {
-//                    @ApiResponse(
-//                            responseCode = "200",
-//                            description = "레시피 목록 조회 성공",
-//                            content = @Content(schema = @Schema(implementation = RecipeResponse.class))
-//                    )
-//            }
-//    )
-//    public ResponseEntity<List<RecipeResponse>> getRecipesByRecipeName(@RequestParam String recipeName) {
-//        List<RecipeResponse> response = recipeService.getRecipesByRecipeName(recipeName);
-//        return ResponseEntity.ok(response);
-//    }
 
 }
