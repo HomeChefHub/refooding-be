@@ -7,8 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 @Builder
-public class RecipeResponse {
-    private Long id;
+public class RecipeIngredientResponse {
     private String name;
-    private String imgSrc;
+    private String quantity;
 }

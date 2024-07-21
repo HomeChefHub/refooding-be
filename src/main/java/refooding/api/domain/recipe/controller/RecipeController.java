@@ -39,21 +39,21 @@ public class RecipeController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("/{recipeId}")
-//    @Operation(
-//            summary = "레시피 상세 조회",
-//            responses = {
-//                    @ApiResponse(
-//                            responseCode = "200",
-//                            description = "레시피 상세 조회 성공",
-//                            content = @Content(schema = @Schema(implementation = RecipeDetailResponse.class))
-//                    )
-//            }
-//    )
-//    public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@PathVariable Long recipeId) {
-//        RecipeDetailResponse response = recipeService.getRecipeDetailById(recipeId);
-//        return ResponseEntity.ok(response);
-//    }
+    @GetMapping("/{recipeId}")
+    @Operation(
+            summary = "레시피 상세 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "레시피 상세 조회 성공",
+                            content = @Content(schema = @Schema(implementation = RecipeDetailResponse.class))
+                    )
+            }
+    )
+    public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@PathVariable Long recipeId) {
+        RecipeDetailResponse response = recipeService.getRecipeDetailById(recipeId);
+        return ResponseEntity.ok(response);
+    }
 //
 //    @GetMapping()
 //    @Operation(

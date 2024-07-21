@@ -3,7 +3,10 @@ package refooding.api.domain.recipe.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import refooding.api.common.exception.RecipeNotFoundException;
+import refooding.api.domain.recipe.dto.ManualResponse;
 import refooding.api.domain.recipe.dto.RecipeDetailResponse;
+import refooding.api.domain.recipe.dto.RecipeIngredientResponse;
 import refooding.api.domain.recipe.dto.RecipeResponse;
 import refooding.api.domain.recipe.entity.Recipe;
 import refooding.api.domain.recipe.repository.RecipeRepository;
@@ -30,19 +33,23 @@ public class RecipeService {
 
         // DTO 변환
         return allRecipes.stream()
-                .map(recipe -> new RecipeResponse(
-                        recipe.getId(),
-                        recipe.getName(),
-                        recipe.getMainImgSrc()
-                )).collect(Collectors.toList());
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .toList();
     }
 
-//    public RecipeDetailResponse getRecipeDetailById(Long recipeId) {
-//        Optional<Recipe> recipeDetail = recipeRepository.findByIdWithDetails(recipeId);
-//
-//        // DTO 변환
-//
-//    }
+    public RecipeDetailResponse getRecipeDetailById(Long recipeId) {
+        Recipe recipeDetail = recipeRepository.findByIdWithDetails(recipeId)
+                .orElseThrow(() -> new RecipeNotFoundException("레시피 id에 해당하는 레시피가 없습니다. recipeId: " + recipeId));
+
+        // DTO 변환
+        return convertToRecipeDetailResponse(recipeDetail);
+
+
+    }
 //
 //    // 생각해보니까 Recipe엔티티에 주재료명을 저장하는게 낫겠다.
 //    // 그러면 주재료를 통해 Recipe를 쉽게 검색 가능하니까.
@@ -57,6 +64,31 @@ public class RecipeService {
 //
 //    }
 
+
+    private RecipeDetailResponse convertToRecipeDetailResponse(Recipe recipe) {
+        List<ManualResponse> manualResponseList = recipe.getManualList().stream()
+                .map(manual -> ManualResponse.builder()
+                        .seq(manual.getSeq())
+                        .content(manual.getContent())
+                        .imgSrc(manual.getImageSrc())
+                        .build())
+                .toList();
+
+        List<RecipeIngredientResponse> riResponseList = recipe.getRecipeIngredientList().stream()
+                .map(ri -> RecipeIngredientResponse.builder()
+                        .name(ri.getIngredient().getName())
+                        .quantity(ri.getQuantity())
+                        .build())
+                .toList();
+
+        return RecipeDetailResponse.builder()
+                .name(recipe.getName())
+                .imgSrc(recipe.getMainImgSrc())
+                .tip(recipe.getTip())
+                .manualResponseList(manualResponseList)
+                .recipeIngredientResponseList(riResponseList)
+                .build();
+    }
 
 
 
