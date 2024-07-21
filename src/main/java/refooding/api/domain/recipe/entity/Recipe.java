@@ -25,6 +25,10 @@ public class Recipe extends BaseTimeEntity {
 
     private String tip;
 
+    private String mainIngredientName;
+
+    private String mainImgSrc;
+
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true) // Recipe 엔티티 삭제시 Manual도 삭제
     private Set<Manual> manualList = new HashSet<>();
 
@@ -32,9 +36,11 @@ public class Recipe extends BaseTimeEntity {
     private Set<RecipeIngredient> recipeIngredientList = new HashSet<>();
 
     @Builder
-    public Recipe(String name, String tip) {
+    public Recipe(String name, String tip, String mainIngredientName, String mainImgSrc) {
         this.name = name;
         this.tip = tip;
+        this.mainIngredientName = mainIngredientName;
+        this.mainImgSrc = mainImgSrc;
     }
 
     // == 연관관계 편의 메소드 == //

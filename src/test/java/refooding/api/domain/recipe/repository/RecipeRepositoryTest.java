@@ -12,6 +12,7 @@ import refooding.api.domain.recipe.entity.Recipe;
 import refooding.api.domain.recipe.entity.RecipeIngredient;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -52,6 +53,8 @@ public class RecipeRepositoryTest {
         Recipe recipe = Recipe.builder()
                 .name("새우김치볶음")
                 .tip("이런 요리는 없으니 해먹지 마세요!")
+                .mainIngredientName("새우")
+                .mainImgSrc("www.naver.com")
                 .build();
 
 
@@ -136,6 +139,17 @@ public class RecipeRepositoryTest {
                     System.out.println("recipeIngredient.getQuantity() = " + recipeIngredient.getQuantity())
             );
         });
+    }
+
+    @Test
+    void 전체_목록_조회_테스트() {
+        List<Recipe> all = recipeRepository.findAll();
+
+        for (Recipe recipe : all) {
+            System.out.println(recipe.getId());
+            System.out.println(recipe.getName());
+            System.out.println(recipe.getMainImgSrc());
+        }
     }
 
 }
