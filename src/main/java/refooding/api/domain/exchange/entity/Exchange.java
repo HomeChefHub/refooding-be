@@ -1,4 +1,4 @@
-package refooding.api.domain.exchange;
+package refooding.api.domain.exchange.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
