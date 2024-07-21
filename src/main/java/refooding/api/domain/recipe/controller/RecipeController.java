@@ -51,7 +51,7 @@ public class RecipeController {
             }
     )
     public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@PathVariable Long recipeId) {
-        RecipeDetailResponse response = recipeService.getRecipeDetailById();
+        RecipeDetailResponse response = recipeService.getRecipeDetailById(recipeId);
         return ResponseEntity.ok(response);
     }
 
@@ -66,8 +66,8 @@ public class RecipeController {
                     )
             }
     )
-    public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@RequestParam String ingredientName) {
-        RecipeDetailResponse response = recipeService.getRecipesByIngredientName(ingredientName);
+    public ResponseEntity<List<RecipeResponse>> getRecipesByIngredientName(@RequestParam String ingredientName) {
+        List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
         return ResponseEntity.ok(response);
     }
 
@@ -82,8 +82,8 @@ public class RecipeController {
                     )
             }
     )
-    public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@RequestParam String recipeName) {
-        RecipeDetailResponse response = recipeService.getRecipesByRecipeName();
+    public ResponseEntity<List<RecipeResponse>> getRecipesByRecipeName(@RequestParam String recipeName) {
+        List<RecipeResponse> response = recipeService.getRecipesByRecipeName(recipeName);
         return ResponseEntity.ok(response);
     }
 

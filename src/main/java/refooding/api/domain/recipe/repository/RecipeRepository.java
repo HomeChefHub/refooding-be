@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import refooding.api.domain.recipe.entity.Recipe;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
@@ -13,4 +14,6 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "left join fetch r.recipeIngredientList ri " +
             "left join fetch ri.ingredient where r.id = :id")
     Optional<Recipe> findByIdWithDetails(Long id);
+
+    Optional<List<Recipe>> findByNameContaining(String recipeName);
 }
