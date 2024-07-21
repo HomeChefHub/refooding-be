@@ -1,4 +1,4 @@
-package refooding.api.testUtils;
+package refooding.api.utils;
 
 import jakarta.persistence.EntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;

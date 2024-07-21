@@ -8,7 +8,7 @@ import org.springframework.test.context.jdbc.Sql;
 import refooding.api.domain.exchange.entity.Exchange;
 import refooding.api.domain.exchange.entity.ExchangeStatus;
 import refooding.api.domain.exchange.entity.Region;
-import refooding.api.testUtils.EntityManagerUtil;
+import refooding.api.utils.EntityManagerUtil;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
