@@ -103,7 +103,7 @@ public class RecipeRepositoryTest {
 
         // when
 //        Optional<Recipe> findRecipe = recipeRepository.findById(1L);
-        Optional<Recipe> findRecipe = recipeRepository.findByIdWithDetails(4L);
+        Optional<Recipe> findRecipe = recipeRepository.findByIdWithDetails(1L);
 
 
         // then
