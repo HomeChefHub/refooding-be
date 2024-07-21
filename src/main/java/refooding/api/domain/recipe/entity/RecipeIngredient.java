@@ -1,11 +1,15 @@
 package refooding.api.domain.recipe.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RecipeIngredient extends BaseTimeEntity {
 
     @Id
@@ -23,4 +27,21 @@ public class RecipeIngredient extends BaseTimeEntity {
     private String quantity;
 
     private boolean isMainIngredient;
+
+    @Builder
+    public RecipeIngredient(Ingredient ingredient, String quantity, boolean isMainIngredient) {
+        this.ingredient = ingredient;
+        this.quantity = quantity;
+        this.isMainIngredient = isMainIngredient;
+    }
+
+
+    // == 연관관계 편의 메소드 == //
+    public void changeRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
+    public void changeIngredient(Ingredient ingredient) {
+        this.ingredient = ingredient;
+    }
 }
