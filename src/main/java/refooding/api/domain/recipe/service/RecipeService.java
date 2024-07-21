@@ -3,7 +3,6 @@ package refooding.api.domain.recipe.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import refooding.api.common.exception.RecipeNotFoundException;
 import refooding.api.domain.recipe.dto.ManualResponse;
 import refooding.api.domain.recipe.dto.RecipeDetailResponse;
 import refooding.api.domain.recipe.dto.RecipeIngredientResponse;
@@ -42,12 +41,9 @@ public class RecipeService {
     }
 
     public RecipeDetailResponse getRecipeDetailById(Long recipeId) {
-        Recipe recipeDetail = recipeRepository.findByIdWithDetails(recipeId)
-                .orElseThrow(() -> new RecipeNotFoundException("레시피 id에 해당하는 레시피가 없습니다. recipeId: " + recipeId));
-
-        // DTO 변환
-        return convertToRecipeDetailResponse(recipeDetail);
-
+        return recipeRepository.findByIdWithDetails(recipeId)
+                .map(this::convertToRecipeDetailResponse) // Recipe가 존재하면 DTO 변환
+                .orElse(null); // Recipe가 존재하지 않으면 null 반환
 
     }
 //
