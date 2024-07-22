@@ -18,12 +18,18 @@ public abstract class BaseTimeEntity {
     // 생성 시간
     // Entity가 생성되어 저장될 때 시간을 자동 저장
     @CreatedDate
-    @Column(updatable = false) // 생성 시간이므로 수정 불가능
+    @Column(nullable = false, updatable = false) // 생성 시간이므로 수정 불가능
     private LocalDateTime createdDate;
 
     // 수정 시간
     // 조회한 Entity 값을 변경할 때 시간을 자동 저장
     @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime modifiedDate;
+
+    // 삭제 시간
+    // Entity 삭제 시간을 자동 저장
+    @Column(nullable = true)
+    protected LocalDateTime deletedDate;
 
 }
