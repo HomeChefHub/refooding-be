@@ -19,12 +19,13 @@ public class ExchangeServiceImpl implements ExchangeService{
 
     @Transactional
     @Override
-    public void create(ExchangeCreateRequest request) {
+    public Long create(ExchangeCreateRequest request) {
         Exchange exchange = request.toExchange();
         Region region = regionRepository.findById(request.regionId()).orElseThrow();
         exchange.updateRegion(region);
 
         exchangeRepository.save(exchange);
+        return exchange.getId();
     }
 
 }

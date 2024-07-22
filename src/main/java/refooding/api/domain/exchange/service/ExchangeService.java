@@ -4,5 +4,5 @@ import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
 
 public interface ExchangeService {
 
-    void create(ExchangeCreateRequest request);
+    Long create(ExchangeCreateRequest request);
 }
