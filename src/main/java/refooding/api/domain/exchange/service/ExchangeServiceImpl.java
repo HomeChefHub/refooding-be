@@ -44,4 +44,12 @@ public class ExchangeServiceImpl implements ExchangeService{
         );
     }
 
+    @Override
+    @Transactional
+    public void delete(Long exchangeId) {
+        // TODO : 에러처리
+        Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
+        exchange.delete();
+    }
+
 }

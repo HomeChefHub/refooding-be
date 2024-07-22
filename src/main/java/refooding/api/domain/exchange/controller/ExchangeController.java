@@ -57,6 +57,21 @@ public class ExchangeController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{exchangeId}")
+    @Operation(
+            summary = "식재료 교환글 삭제",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "식재료 교환글 삭제 성공"
+                    )
+            }
+    )
+    public ResponseEntity<Void> delete(@PathVariable Long exchangeId) {
+        exchangeService.delete(exchangeId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/regions")
     @Operation(
             summary = "식재료 교환 지역 목록 조회",

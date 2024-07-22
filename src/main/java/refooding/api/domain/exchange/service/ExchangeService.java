@@ -8,4 +8,6 @@ public interface ExchangeService {
     Long create(ExchangeCreateRequest request);
 
     void update(Long exchangeId, ExchangeUpdateRequest request);
+
+    void delete(Long exchangeId);
 }
