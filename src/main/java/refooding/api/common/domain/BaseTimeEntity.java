@@ -30,6 +30,6 @@ public abstract class BaseTimeEntity {
     // 삭제 시간
     // Entity 삭제 시간을 자동 저장
     @Column(nullable = true)
-    protected LocalDateTime deletedAt;
+    protected LocalDateTime deletedDate;
 
 }
