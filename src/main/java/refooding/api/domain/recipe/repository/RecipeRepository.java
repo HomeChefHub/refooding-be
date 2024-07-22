@@ -15,7 +15,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "left join fetch ri.ingredient where r.id = :id")
     Optional<Recipe> findByIdWithDetails(Long id);
 
-    Optional<List<Recipe>> findByNameContaining(String recipeName);
+    List<Recipe> findByNameContaining(String recipeName);
 
-    Optional<List<Recipe>> findByMainIngredientName(String ingredientName);
+    List<Recipe> findByMainIngredientName(String ingredientName);
 }

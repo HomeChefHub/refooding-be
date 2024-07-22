@@ -43,7 +43,7 @@ public class RecipeService {
     }
 
     public List<RecipeResponse> getRecipesByIngredientName(String ingredientName) {
-        List<Recipe> findRecipes = recipeRepository.findByMainIngredientName(ingredientName).orElse(Collections.emptyList());
+        List<Recipe> findRecipes = recipeRepository.findByMainIngredientName(ingredientName);
 
         // DTO 변환
         return findRecipes.stream()
@@ -56,7 +56,7 @@ public class RecipeService {
     }
 //
     public List<RecipeResponse> getRecipesByRecipeName(String recipeName) {
-        List<Recipe> findRecipes = recipeRepository.findByNameContaining(recipeName).orElse(Collections.emptyList());
+        List<Recipe> findRecipes = recipeRepository.findByNameContaining(recipeName);
 
         // DTO 변환
         return findRecipes.stream()
