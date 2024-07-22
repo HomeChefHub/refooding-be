@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
+import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
 import refooding.api.domain.exchange.dto.response.RegionResponse;
 import refooding.api.domain.exchange.service.ExchangeService;
 import refooding.api.domain.exchange.service.RegionService;
@@ -42,6 +42,20 @@ public class ExchangeController {
         return ResponseEntity.created(URI.create("/api/v1/exchanges/" + exchangeId)).build();
     }
 
+    @PatchMapping("/{exchangeId}")
+    @Operation(
+            summary = "식재료 교환글 수정",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "식재료 교환글 수정 성공"
+                    )
+            }
+    )
+    public ResponseEntity<Void> update(@PathVariable Long exchangeId, @RequestBody ExchangeUpdateRequest request){
+        exchangeService.update(exchangeId, request);
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/regions")
     @Operation(

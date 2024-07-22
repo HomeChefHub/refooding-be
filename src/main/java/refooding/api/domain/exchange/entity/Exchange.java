@@ -41,7 +41,10 @@ public class Exchange extends BaseTimeEntity {
         this.region = region;
     }
 
-    public void updateRegion(Region region) {
+    public void updateExchange(String title, String content, ExchangeStatus status, Region region) {
+        this.title = title;
+        this.content = content;
+        this.status = status;
         this.region = region;
     }
 }

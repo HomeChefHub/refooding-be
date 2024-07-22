@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
+import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
 import refooding.api.domain.exchange.entity.Exchange;
 import refooding.api.domain.exchange.entity.Region;
 import refooding.api.domain.exchange.repository.ExchangeRepository;
@@ -17,15 +18,30 @@ public class ExchangeServiceImpl implements ExchangeService{
     private final ExchangeRepository exchangeRepository;
     private final RegionRepository regionRepository;
 
-    @Transactional
     @Override
+    @Transactional
     public Long create(ExchangeCreateRequest request) {
-        Exchange exchange = request.toExchange();
+        // TODO : 에러처리
         Region region = regionRepository.findById(request.regionId()).orElseThrow();
-        exchange.updateRegion(region);
+        Exchange exchange = request.toExchange(region);
 
         exchangeRepository.save(exchange);
         return exchange.getId();
+    }
+
+    @Override
+    @Transactional
+    public void update(Long exchangeId, ExchangeUpdateRequest request) {
+        // TODO : 에러처리
+        Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
+        Region region = regionRepository.findById(request.regionId()).orElseThrow();
+
+        exchange.updateExchange(
+                request.title(),
+                request.content(),
+                request.status(),
+                region
+        );
     }
 
 }
