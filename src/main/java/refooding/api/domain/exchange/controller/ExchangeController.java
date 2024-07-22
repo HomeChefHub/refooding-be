@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
 import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
+import refooding.api.domain.exchange.dto.response.ExchangeDetailResponse;
 import refooding.api.domain.exchange.dto.response.RegionResponse;
 import refooding.api.domain.exchange.service.ExchangeService;
 import refooding.api.domain.exchange.service.RegionService;
@@ -25,6 +26,21 @@ public class ExchangeController {
 
     private final ExchangeService exchangeService;
     private final RegionService regionService;
+
+    @GetMapping("/{exchangeId}")
+    @Operation(
+            summary = "식재료 교환 상세 조회",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "식재료 교환 상세 조회 성공"
+                    )
+            }
+    )
+    public ResponseEntity<ExchangeDetailResponse> getExchangeById(@PathVariable Long exchangeId) {
+        ExchangeDetailResponse response = exchangeService.getExchangeById(exchangeId);
+        return ResponseEntity.ok(response);
+    }
 
     @PostMapping
     @Operation(
