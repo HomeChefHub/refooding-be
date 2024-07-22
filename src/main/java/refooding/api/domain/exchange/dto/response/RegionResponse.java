@@ -1,20 +1,19 @@
 package refooding.api.domain.exchange.dto.response;
 
 
-import lombok.AllArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import refooding.api.domain.exchange.entity.Region;
 
 import java.util.List;
-@Getter
-@AllArgsConstructor
-public class RegionResponse{
 
-    private Long id;
-    private String name;
-    private List<ChildRegion> childRegions;
+public record RegionResponse(
+        Long id,
+        String name,
+        @Schema(description = "해당 지역에 대한 하위 지역 목록")
+        List<ChildRegion> childRegions) {
 
-    public static RegionResponse from(Region region){
+    public static RegionResponse from(Region region) {
         return new RegionResponse(
                 region.getId(),
                 region.getName(),
@@ -24,16 +23,10 @@ public class RegionResponse{
         );
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class ChildRegion{
-        private Long id;
-        private String name;
-
+    public record ChildRegion(Long id, String name) {
         public static ChildRegion from(Region region) {
             return new ChildRegion(region.getId(), region.getName());
         }
     }
 
 }
-
