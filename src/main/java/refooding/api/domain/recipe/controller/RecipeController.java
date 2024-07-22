@@ -66,20 +66,4 @@ public class RecipeController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/search")
-    @Operation(
-            summary = " 주재료 이름으로 레시피 목록 조회",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "레시피 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = RecipeResponse.class))
-                    )
-            }
-    )
-    public ResponseEntity<List<RecipeResponse>> getRecipesByIngredientName(@RequestParam String ingredientName) {
-        List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
-        return ResponseEntity.ok(response);
-    }
-
 }
