@@ -13,18 +13,18 @@ public record RegionResponse(
         @Schema(description = "해당 지역에 대한 하위 지역 목록")
         List<ChildRegion> childRegions) {
 
-    public static RegionResponse from(Region region) {
+    public static RegionResponse of(Region region) {
         return new RegionResponse(
                 region.getId(),
                 region.getName(),
                 region.getChildren().stream()
-                        .map(ChildRegion::from)
+                        .map(ChildRegion::of)
                         .toList()
         );
     }
 
     public record ChildRegion(Long id, String name) {
-        public static ChildRegion from(Region region) {
+        public static ChildRegion of(Region region) {
             return new ChildRegion(region.getId(), region.getName());
         }
     }
