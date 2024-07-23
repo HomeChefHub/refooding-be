@@ -33,11 +33,11 @@ public class RecipeController {
                     )
             }
     )
-    public ResponseEntity<List<RecipeResponse>> getRecipes(@RequestParam(required = false) String ingredientName,
+    public ResponseEntity<List<RecipeResponse>> getRecipes(@RequestParam(required = false) List<String> ingredientNames,
                                                            @RequestParam(required = false) String recipeName) {
 
-        if (ingredientName != null) { // 주 재료명으로 조회하는 경우
-            List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
+        if (ingredientNames != null && !ingredientNames.isEmpty()) { // 주 재료명으로 조회하는 경우
+            List<RecipeResponse> response = recipeService.getRecipesByIngredientNames(ingredientNames);
             return ResponseEntity.ok(response);
         }
         if (recipeName != null) { // 레시피명으로 조회하는 경우

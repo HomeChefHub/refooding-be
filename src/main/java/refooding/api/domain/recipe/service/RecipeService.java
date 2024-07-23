@@ -54,7 +54,19 @@ public class RecipeService {
                         .build())
                 .toList();
     }
-//
+
+    public List<RecipeResponse> getRecipesByIngredientNames(List<String> ingredientNames) {
+        List<Recipe> findRecipes = recipeRepository.findByMainIngredientNames(ingredientNames);
+
+        // DTO 변환
+        return findRecipes.stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .toList();
+    }
     public List<RecipeResponse> getRecipesByRecipeName(String recipeName) {
         List<Recipe> findRecipes = recipeRepository.findByNameContaining(recipeName);
 
