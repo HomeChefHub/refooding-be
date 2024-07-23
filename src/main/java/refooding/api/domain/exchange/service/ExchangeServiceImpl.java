@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
 import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
+import refooding.api.domain.exchange.dto.response.ExchangeDetailResponse;
 import refooding.api.domain.exchange.entity.Exchange;
 import refooding.api.domain.exchange.entity.Region;
 import refooding.api.domain.exchange.repository.ExchangeRepository;
@@ -50,6 +51,13 @@ public class ExchangeServiceImpl implements ExchangeService{
         // TODO : 에러처리
         Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
         exchange.delete();
+    }
+
+    @Override
+    public ExchangeDetailResponse getExchangeById(Long exchangeId) {
+        // TODO : 에러처리
+        Exchange exchange = exchangeRepository.findExchangeById(exchangeId).orElseThrow();
+        return ExchangeDetailResponse.from(exchange);
     }
 
 }
