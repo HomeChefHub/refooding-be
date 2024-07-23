@@ -1,7 +1,10 @@
 package refooding.api.domain.recipe.repository;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import refooding.api.domain.recipe.entity.Recipe;
 
 import java.util.List;
@@ -15,10 +18,10 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "left join fetch ri.ingredient where r.id = :id")
     Optional<Recipe> findByIdWithDetails(Long id);
 
-    List<Recipe> findByNameContaining(String recipeName);
-
-    List<Recipe> findByMainIngredientName(String ingredientName);
+    @Query("select r from Recipe r")
+    Slice<Recipe> findAllBySlice(Pageable pageable);
+    Slice<Recipe> findByNameContaining(String recipeName, Pageable pageable);
 
     @Query("select r from Recipe r where r.mainIngredientName in :ingredientNames")
-    List<Recipe> findByMainIngredientNames(List<String> ingredientNames);
+    Slice<Recipe> findByMainIngredientNames(List<String> ingredientNames, Pageable pageable);
 }
