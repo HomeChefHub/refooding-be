@@ -12,6 +12,7 @@ import refooding.api.domain.recipe.dto.RecipeDetailResponse;
 import refooding.api.domain.recipe.dto.RecipeResponse;
 import refooding.api.domain.recipe.service.RecipeService;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Tag(name = "레시피 조회 API")
@@ -33,11 +34,12 @@ public class RecipeController {
                     )
             }
     )
-    public ResponseEntity<List<RecipeResponse>> getRecipes(@RequestParam(required = false) List<String> ingredientNames,
+    public ResponseEntity<List<RecipeResponse>> getRecipes(@RequestParam(required = false) String ingredientNames,
                                                            @RequestParam(required = false) String recipeName) {
 
         if (ingredientNames != null && !ingredientNames.isEmpty()) { // 주 재료명으로 조회하는 경우
-            List<RecipeResponse> response = recipeService.getRecipesByIngredientNames(ingredientNames);
+            List<String> ingredientNameList = Arrays.asList(ingredientNames.split(","));
+            List<RecipeResponse> response = recipeService.getRecipesByIngredientNames(ingredientNameList);
             return ResponseEntity.ok(response);
         }
         if (recipeName != null) { // 레시피명으로 조회하는 경우
