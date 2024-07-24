@@ -1,17 +1,21 @@
 package refooding.api.domain.recipe.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import refooding.api.domain.recipe.dto.RecipeDetailResponse;
 import refooding.api.domain.recipe.dto.RecipeResponse;
 import refooding.api.domain.recipe.service.RecipeService;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Tag(name = "레시피 조회 API")
@@ -33,19 +37,23 @@ public class RecipeController {
                     )
             }
     )
-    public ResponseEntity<List<RecipeResponse>> getRecipes(@RequestParam(required = false) String ingredientName,
-                                                           @RequestParam(required = false) String recipeName) {
+    public ResponseEntity<Slice<RecipeResponse>> getRecipes(@RequestParam(required = false)
+                                                                @Parameter(example = "감자,당근") String ingredientNames,
+                                                           @RequestParam(required = false) String recipeName,
+                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "5") int size) {
 
-        if (ingredientName != null) { // 주 재료명으로 조회하는 경우
-            List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
+        if (ingredientNames != null && !ingredientNames.isEmpty()) { // 주 재료명으로 조회하는 경우
+            List<String> ingredientNameList = Arrays.asList(ingredientNames.split(",")); // ,을 기준으로 슬라이싱
+            Slice<RecipeResponse> response = recipeService.getRecipesByIngredientNames(ingredientNameList, PageRequest.of(page, size));
             return ResponseEntity.ok(response);
         }
         if (recipeName != null) { // 레시피명으로 조회하는 경우
-            List<RecipeResponse> response = recipeService.getRecipesByRecipeName(recipeName);
+            Slice<RecipeResponse> response = recipeService.getRecipesByRecipeName(recipeName, PageRequest.of(page, size));
             return ResponseEntity.ok(response);
         }
         else { // 전체 조회
-            List<RecipeResponse> response = recipeService.getRecipes();
+            Slice<RecipeResponse> response = recipeService.getRecipes(PageRequest.of(page, size));
             return ResponseEntity.ok(response);
         }
     }
@@ -63,22 +71,6 @@ public class RecipeController {
     )
     public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@PathVariable Long recipeId) {
         RecipeDetailResponse response = recipeService.getRecipeDetailById(recipeId);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/search")
-    @Operation(
-            summary = " 주재료 이름으로 레시피 목록 조회",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "레시피 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = RecipeResponse.class))
-                    )
-            }
-    )
-    public ResponseEntity<List<RecipeResponse>> getRecipesByIngredientName(@RequestParam String ingredientName) {
-        List<RecipeResponse> response = recipeService.getRecipesByIngredientName(ingredientName);
         return ResponseEntity.ok(response);
     }
 
