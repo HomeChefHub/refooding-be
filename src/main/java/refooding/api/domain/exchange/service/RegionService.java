@@ -20,7 +20,7 @@ public class RegionService {
         List<Region> regions = regionRepository.findByParentIsNull();
         return regions
                 .stream()
-                .map(RegionResponse::from)
+                .map(RegionResponse::of)
                 .toList();
     }
 
