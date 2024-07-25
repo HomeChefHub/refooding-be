@@ -30,6 +30,7 @@ public class Recipe extends BaseTimeEntity {
     private String mainImgSrc;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true) // Recipe 엔티티 삭제시 Manual도 삭제
+    @OrderBy("seq ASC") // seq를 기준으로 오름차순 정렬
     private Set<Manual> manualList = new HashSet<>();
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true) // Recipe 엔티티 삭제시 해당 엔티티의 PK를 FK로 가지고 있는 recipeIngredient도 삭제

@@ -65,16 +65,12 @@ public class RecipeService {
 
 
         // Manual 엔티티 생성 및 저장
-        List<RecipeData.Manual> manualList = recipeJson.getManuals();
-        for (int i = 0; i < manualList.size(); i ++) {
-            RecipeData.Manual manualJson = manualList.get(i);
-            Manual manual = Manual.builder()
-                    .seq(i + 1)
-                    .content(manualJson.getContent())
-                    .imageSrc(manualJson.getImageSrc())
-                    .build();
+        List<Manual> manualList = recipeJson.getManuals().stream()
+                .map(manualJson -> Manual.builder().seq(manualJson.getSeq()).content(manualJson.getContent()).imageSrc(manualJson.getImageSrc()).build())
+                .toList();
 
-            // Manual 엔티티 저장
+        // 엔티티 저장
+        for (Manual manual : manualList) {
             recipe.addManual(manual);
         }
 
