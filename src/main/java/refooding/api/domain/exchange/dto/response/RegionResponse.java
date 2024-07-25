@@ -2,7 +2,6 @@ package refooding.api.domain.exchange.dto.response;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Getter;
 import refooding.api.domain.exchange.entity.Region;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public record RegionResponse(
         );
     }
 
-    public record ChildRegion(Long id, String name) {
+    private record ChildRegion(Long id, String name) {
         public static ChildRegion of(Region region) {
             return new ChildRegion(region.getId(), region.getName());
         }
