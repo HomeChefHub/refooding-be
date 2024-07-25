@@ -76,19 +76,16 @@ public class RecipeRepositoryTest {
         RecipeIngredient riSalt = RecipeIngredient.builder()
                 .ingredient(salt)
                 .quantity("75g")
-                .isMainIngredient(false)
                 .build();
 
         RecipeIngredient riKimchi = RecipeIngredient.builder()
                 .ingredient(kimchi)
                 .quantity("한 포기")
-                .isMainIngredient(false)
                 .build();
 
         RecipeIngredient riShrimp = RecipeIngredient.builder()
                 .ingredient(shrimp)
                 .quantity("100마리")
-                .isMainIngredient(false)
                 .build();
 
         recipe.addRecipeIngredient(riSalt);

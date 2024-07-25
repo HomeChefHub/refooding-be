@@ -26,13 +26,11 @@ public class RecipeIngredient extends BaseTimeEntity {
 
     private String quantity;
 
-    private boolean isMainIngredient;
 
     @Builder
-    public RecipeIngredient(Ingredient ingredient, String quantity, boolean isMainIngredient) {
+    public RecipeIngredient(Ingredient ingredient, String quantity) {
         this.ingredient = ingredient;
         this.quantity = quantity;
-        this.isMainIngredient = isMainIngredient;
     }
 
 
