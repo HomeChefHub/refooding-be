@@ -29,6 +29,8 @@ public class RecipeData {
 
     @Getter
     public static class Manual {
+        @JsonProperty("seq")
+        private int seq;
         @JsonProperty("content")
         private String content;
         @JsonProperty("imageSrc")
