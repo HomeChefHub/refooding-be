@@ -5,11 +5,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionResponse;
+import refooding.api.common.exception.FieldErrorResponse;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
@@ -25,6 +29,18 @@ public class GlobalExceptionHandler{
         ExceptionResponse response = ExceptionResponse.of(e.getExceptionCode());
 
         return ResponseEntity.status(response.status()).body(response);
+    }
+
+    /**
+     * 요청 본문 유효성 검사
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<List<FieldErrorResponse>> handle(MethodArgumentNotValidException e) {
+        log.warn("[MethodArgumentNotValidException] {}", e.getMessage(), e);
+
+        List<FieldErrorResponse> response = FieldErrorResponse.of(e.getBindingResult());
+
+        return ResponseEntity.status(BAD_REQUEST).body(response);
     }
 
     /**
