@@ -35,7 +35,7 @@ public class ExchangeController implements ExchangeControllerOpenApi{
             @RequestParam(required = false) Long lastExchangeId
             ) {
 
-        Slice<ExchangeResponse> response = exchangeService.findExchanges(keyword, status, regionId, lastExchangeId, PageRequest.ofSize(size));
+        Slice<ExchangeResponse> response = exchangeService.getExchanges(keyword, status, regionId, lastExchangeId, PageRequest.ofSize(size));
         return ResponseEntity.ok(response);
     }
     @Override
