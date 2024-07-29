@@ -9,4 +9,8 @@ public record ExceptionResponse(
     public static ExceptionResponse of(ExceptionCode exceptionCode) {
         return new ExceptionResponse(exceptionCode.getStatus(), exceptionCode.getMessage());
     }
+
+    public static ExceptionResponse of(HttpStatus status, String message) {
+        return new ExceptionResponse(status, message);
+    }
 }
