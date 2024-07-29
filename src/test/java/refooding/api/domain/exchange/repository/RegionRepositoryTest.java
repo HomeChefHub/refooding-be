@@ -3,23 +3,23 @@ package refooding.api.domain.exchange.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
+import org.springframework.context.annotation.Import;
+import refooding.api.common.config.QuerydslConfig;
 import refooding.api.domain.exchange.entity.Region;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(QuerydslConfig.class)
 @DataJpaTest
-@Sql(value = {"classpath:exchange-data.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 class RegionRepositoryTest {
 
     @Autowired
-    RegionRepository regionRepository;
+    private RegionRepository regionRepository;
 
     @Test
-    void 식재료_교환_지역_조회() {
+    void 식재료_교환_지역_목록_조회() {
         // when
         List<Region> parentRegions = regionRepository.findByParentIsNull();
 
