@@ -1,4 +1,3 @@
--- 지역
 INSERT INTO Region (name) VALUES ('서울');
 INSERT INTO Region (name) VALUES ('경기');
 INSERT INTO Region (name) VALUES ('인천');
@@ -281,31 +280,31 @@ INSERT INTO Region (name, parent_id) VALUES ('서귀포시', 16);
 INSERT INTO Region (name, parent_id) VALUES ('제주시', 16);
 
 -- 식재료 교환 등록
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('당근 나눔합니다', '당근 나눠드려요', 'ACTIVE', 17, '2024-07-24 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('오이 나눔합니다', '오이 나눠드려요', 'TRADED', 19, '2024-07-24 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('당근 나눔합니다', '당근 나눠드려요', 'ACTIVE', 17, 1, '2024-07-24 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('오이 나눔합니다', '오이 나눠드려요', 'TRADED', 19, 2, '2024-07-24 14:15:49.431', '2024-07-24 14:15:49.431');
 
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('수박 나눔합니다', '수박 나눠드려요', 'TRADED', 17, '2024-07-25 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('호박 나눔합니다', '호박 나눠드려요', 'ACTIVE', 20, '2024-07-25 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('수박 나눔합니다', '수박 나눠드려요', 'TRADED', 17, 1, '2024-07-25 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('호박 나눔합니다', '호박 나눠드려요', 'ACTIVE', 20, 1, '2024-07-25 14:15:49.431', '2024-07-24 14:15:49.431');
 
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('당근 공동구매 하실분?', '강남구 당근 공구 구해요', 'TRADED', 17, '2024-07-26 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('파 나눔합니다', '파가 많아서 나눠드려요', 'ACTIVE', 20, '2024-07-26 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('자몽 팔아요', '자몽 한박스 팔아요', 'TRADED', 17, '2024-07-26 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('당근 공동구매 하실분?', '강남구 당근 공구 구해요', 'TRADED', 17, 3, '2024-07-26 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('파 나눔합니다', '파가 많아서 나눠드려요', 'ACTIVE', 20, 2, '2024-07-26 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('자몽 팔아요', '자몽 한박스 팔아요', 'TRADED', 17, 1, '2024-07-26 14:15:49.431', '2024-07-24 14:15:49.431');
 
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('상추 나눔합니다', '상추 나눠드려요', 'ACTIVE', 19, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('당근 팔아요!', '당근 5개에 2000원에 팔아요', 'ACTIVE', 17, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('멜론 공구 구합니다', '멜론 공구합시다', 'TRADED', 23, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('시금치 나눔합니다', '시금치 나눠드려요', 'ACTIVE', 17, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('상추 나눔합니다', '상추 나눠드려요', 'ACTIVE', 19, 2, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('당근 팔아요!', '당근 5개에 2000원에 팔아요', 'ACTIVE', 17, 3, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('멜론 공구 구합니다', '멜론 공구합시다', 'TRADED', 23, 1, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('시금치 나눔합니다', '시금치 나눠드려요', 'ACTIVE', 17, 2, '2024-07-27 14:15:49.431', '2024-07-24 14:15:49.431');
 
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('당근당근 나눔합니다', '당근당근 나눠드려요', 'ACTIVE', 17, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('당근당근 팔아요', '당근당근 팔아요', 'ACTIVE', 51, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('당근이 필요해요', '당근이 필요해요', 'ACTIVE', 55, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('제주도에서 당근이 올라왔어요', '당근 좋아요', 'TRADED', 60, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('초당당근 나눔합니다', '초당당근 나눠드려요', 'ACTIVE', 51, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('불고기에 당근 넣으시나요? 나눔합니다', '불고기에 당근 넣으시나요? 나눠드려요', 'TRADED', 17, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('잡채에 당근 넣으시나요? 나눔합니다', '잡채에 당근 넣으시나요? 나눠드려요', 'TRADED', 60, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('당근당근 나눔합니다', '당근당근 나눠드려요', 'ACTIVE', 17, 3, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('당근당근 팔아요', '당근당근 팔아요', 'ACTIVE', 51, 2, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('당근이 필요해요', '당근이 필요해요', 'ACTIVE', 55, 1, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('제주도에서 당근이 올라왔어요', '당근 좋아요', 'TRADED', 60, 2, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('초당당근 나눔합니다', '초당당근 나눠드려요', 'ACTIVE', 51, 2, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('불고기에 당근 넣으시나요? 나눔합니다', '불고기에 당근 넣으시나요? 나눠드려요', 'TRADED', 17, 2, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('잡채에 당근 넣으시나요? 나눔합니다', '잡채에 당근 넣으시나요? 나눠드려요', 'TRADED', 60, 1, '2024-07-28 14:15:49.431', '2024-07-24 14:15:49.431');
 
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('카레에 당근 넣으시나요? 나눔합니다', '카레에 당근 넣으시나요? 나눠드려요', 'ACTIVE', 17, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('오징어볶음에 당근 넣으시나요? 나눔합니다', '오징어볶음에 당근 넣으시나요? 나눠드려요', 'TRADED', 60, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('제육볶음에 당근 넣으시나요? 나눔합니다', '제육볶음에 당근 넣으시나요? 나눠드려요', 'ACTIVE', 248, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('수제비에 당근 넣으시나요? 나눔합니다', '수제비에 당근 넣으시나요? 나눠드려요', 'TRADED', 248, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
-INSERT INTO Exchange (title, content, status, region_id, created_date, modified_date) VALUES ('칼국수에 당근 넣으시나요? 나눔합니다', '칼국수에 당근 넣으시나요? 나눠드려요', 'TRADED', 17, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('카레에 당근 넣으시나요? 나눔합니다', '카레에 당근 넣으시나요? 나눠드려요', 'ACTIVE', 17, 3, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('오징어볶음에 당근 넣으시나요? 나눔합니다', '오징어볶음에 당근 넣으시나요? 나눠드려요', 'TRADED', 60, 3, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('제육볶음에 당근 넣으시나요? 나눔합니다', '제육볶음에 당근 넣으시나요? 나눠드려요', 'ACTIVE', 248, 2, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('수제비에 당근 넣으시나요? 나눔합니다', '수제비에 당근 넣으시나요? 나눠드려요', 'TRADED', 248, 3, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');
+INSERT INTO Exchange (title, content, status, region_id, member_id, created_date, modified_date) VALUES ('칼국수에 당근 넣으시나요? 나눔합니다', '칼국수에 당근 넣으시나요? 나눠드려요', 'TRADED', 17, 1, '2024-07-29 14:15:49.431', '2024-07-24 14:15:49.431');

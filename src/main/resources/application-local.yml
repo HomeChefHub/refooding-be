@@ -15,7 +15,9 @@ spring:
   sql:
     init:
       mode: always
-      data-locations: classpath:exchange-data.sql
+      data-locations:
+        - classpath:member-data.sql
+        - classpath:exchange-data.sql
 
   jpa:
     show-sql: true
