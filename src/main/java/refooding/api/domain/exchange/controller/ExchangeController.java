@@ -1,5 +1,6 @@
 package refooding.api.domain.exchange.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -47,7 +48,7 @@ public class ExchangeController implements ExchangeControllerOpenApi{
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody ExchangeCreateRequest request) {
+    public ResponseEntity<Void> create(@Valid @RequestBody ExchangeCreateRequest request) {
         // TODO : 회원 추가
         Long exchangeId = exchangeService.create(request);
         return ResponseEntity.created(URI.create("/api/v1/exchanges/" + exchangeId)).build();
@@ -55,7 +56,8 @@ public class ExchangeController implements ExchangeControllerOpenApi{
 
     @Override
     @PatchMapping("/{exchangeId}")
-    public ResponseEntity<Void> update(@PathVariable Long exchangeId, @RequestBody ExchangeUpdateRequest request){
+    public ResponseEntity<Void> update(@PathVariable Long exchangeId, @Valid @RequestBody ExchangeUpdateRequest request){
+        // TODO : 회원 추가
         exchangeService.update(exchangeId, request);
         return ResponseEntity.ok().build();
     }
@@ -63,6 +65,7 @@ public class ExchangeController implements ExchangeControllerOpenApi{
     @Override
     @DeleteMapping("/{exchangeId}")
     public ResponseEntity<Void> delete(@PathVariable Long exchangeId) {
+        // TODO : 회원 추가
         exchangeService.delete(exchangeId);
         return ResponseEntity.noContent().build();
     }
