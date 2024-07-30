@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import refooding.api.common.exception.CustomException;
+import refooding.api.common.exception.ExceptionCode;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
 import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
 import refooding.api.domain.exchange.dto.response.ExchangeDetailResponse;
@@ -37,8 +39,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 
     @Override
     public ExchangeDetailResponse getExchangeById(Long exchangeId) {
-        // TODO : 에러처리
-        Exchange exchange = exchangeRepository.findExchangeById(exchangeId).orElseThrow();
+        Exchange exchange = getById(exchangeId);
         return ExchangeDetailResponse.from(exchange);
     }
 
@@ -48,15 +49,16 @@ public class ExchangeServiceImpl implements ExchangeService{
         // TODO : 회원 도메인 구현시 적용
         // 임시 회원 아이디
         Long memberId = 1L;
-        Member findMember = memberRepository.findById(memberId).orElseThrow();
+        Member findMember = getMemberById(memberId);
+        Region region = getRegionById(request.regionId());
 
-        // TODO : 에러처리
-        Region region = regionRepository.findById(request.regionId()).orElseThrow();
         Exchange exchange = request.toExchange(region, findMember);
-
         exchangeRepository.save(exchange);
+
         return exchange.getId();
     }
+
+
 
     @Override
     @Transactional
@@ -64,14 +66,13 @@ public class ExchangeServiceImpl implements ExchangeService{
         // TODO : 회원 도메인 구현시 적용
         // 임시 회원 아이디
         Long memberId = 1L;
+        Member findMember = getMemberById(memberId);
 
-        // TODO : 에러처리
-        Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
-        Region region = regionRepository.findById(request.regionId()).orElseThrow();
-
-        // TODO : 에러처리
-        // Long writeMemberId = exchange.getMember().getId();
-        // if(writeMemberId.equals(memberId)){}
+        Exchange exchange = getById(exchangeId);
+        if (exchange.validateMember(findMember.getId())) {
+            throw new CustomException(ExceptionCode.UNAUTHORIZED);
+        }
+        Region region = getRegionById(request.regionId());
 
         exchange.updateExchange(
                 request.title(),
@@ -87,16 +88,28 @@ public class ExchangeServiceImpl implements ExchangeService{
         // TODO : 회원 도메인 구현시 적용
         // 임시 회원 아이디
         Long memberId = 1L;
+        Member findMember = getMemberById(memberId);
 
-        // TODO : 에러처리
-        Exchange exchange = exchangeRepository.findById(exchangeId).orElseThrow();
-
-        // TODO : 에러처리
-        // Long writeMemberId = exchange.getMember().getId();
-        // if(writeMemberId.equals(memberId)){}
+        Exchange exchange = getById(exchangeId);
+        if (exchange.validateMember(findMember.getId())) {
+            throw new CustomException(ExceptionCode.UNAUTHORIZED);
+        }
 
         exchange.delete();
     }
 
+    private Exchange getById(Long exchangeId) {
+        return exchangeRepository.findExchangeById(exchangeId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_EXCHANGE));
+    }
 
+    private Member getMemberById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
+    }
+
+    private Region getRegionById(Long regionId) {
+        return regionRepository.findById(regionId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_REGION));
+    }
 }

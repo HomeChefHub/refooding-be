@@ -55,4 +55,8 @@ public class Exchange extends BaseTimeEntity {
     public void delete(){
         this.deletedDate = LocalDateTime.now();
     }
+
+    public boolean validateMember(Long memberId) {
+        return getMember().getId().equals(memberId);
+    }
 }
