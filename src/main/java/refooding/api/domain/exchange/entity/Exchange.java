@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
+import refooding.api.domain.member.entity.Member;
 
 import java.time.LocalDateTime;
 
@@ -32,15 +33,16 @@ public class Exchange extends BaseTimeEntity {
     private Region region;
 
     // TODO : 회원 추가
-    // @ManyToOne
-    // @JoinColumn(name = "id")
-    // private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    public Exchange(String title, String content, Region region) {
+    public Exchange(String title, String content, Region region, Member member) {
         this.title = title;
         this.content = content;
         this.status = ExchangeStatus.ACTIVE;
         this.region = region;
+        this.member = member;
     }
 
     public void updateExchange(String title, String content, ExchangeStatus status, Region region) {
@@ -52,5 +54,9 @@ public class Exchange extends BaseTimeEntity {
 
     public void delete(){
         this.deletedDate = LocalDateTime.now();
+    }
+
+    public boolean validateMember(Long memberId) {
+        return getMember().getId().equals(memberId);
     }
 }

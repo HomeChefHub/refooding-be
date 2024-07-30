@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 public record ExchangeResponse(
         Long exchangeId,
         String title,
+        Long memberId,
+        String username,
         String region,
         String childRegion,
         ExchangeStatus status,

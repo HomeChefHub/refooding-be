@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface ExchangeRepository extends JpaRepository<Exchange, Long>, ExchangeCustomRepository {
 
     @Query("select e from Exchange e " +
+            "join fetch e.member m " +
             "join fetch e.region r " +
             "join fetch r.parent pr " +
             "where e.id = :exchangeId and e.deletedDate is null")

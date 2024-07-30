@@ -16,6 +16,7 @@ import refooding.api.domain.exchange.entity.QRegion;
 
 import static refooding.api.domain.exchange.entity.QExchange.exchange;
 import static refooding.api.domain.exchange.entity.QRegion.region;
+import static refooding.api.domain.member.entity.QMember.member;
 
 @Repository
 @RequiredArgsConstructor
@@ -33,6 +34,8 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
                         new QExchangeResponse(
                                 exchange.id,
                                 exchange.title,
+                                member.id,
+                                member.name.as("username"),
                                 parentRegion.name,
                                 region.name,
                                 exchange.status,
@@ -40,6 +43,7 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
                         )
                 )
                 .from(exchange)
+                .leftJoin(exchange.member, member)
                 .leftJoin(exchange.region, region)
                 .leftJoin(parentRegion).on(parentRegion.id.eq(region.parent.id))
                 .where(

@@ -10,7 +10,9 @@ import refooding.api.domain.exchange.entity.ExchangeStatus;
 
 public interface ExchangeService {
 
-    Slice<ExchangeResponse> findExchanges(String keyword, ExchangeStatus status, Long regionId, Long lastExchangeId, Pageable pageable);
+    Slice<ExchangeResponse> getExchanges(String keyword, ExchangeStatus status, Long regionId, Long lastExchangeId, Pageable pageable);
+
+    ExchangeDetailResponse getExchangeById(Long exchangeId);
 
     Long create(ExchangeCreateRequest request);
 
@@ -18,5 +20,4 @@ public interface ExchangeService {
 
     void delete(Long exchangeId);
 
-    ExchangeDetailResponse getExchangeById(Long exchangeId);
 }
