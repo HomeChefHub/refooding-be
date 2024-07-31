@@ -11,6 +11,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import refooding.api.common.exception.CustomException;
+import refooding.api.common.exception.ExceptionCode;
+import refooding.api.domain.recipe.dto.FavoriteRecipeToggleResponse;
 import refooding.api.domain.recipe.dto.RecipeDetailResponse;
 import refooding.api.domain.recipe.dto.RecipeResponse;
 import refooding.api.domain.recipe.service.RecipeService;
@@ -72,6 +75,26 @@ public class RecipeController {
     public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@PathVariable Long recipeId) {
         RecipeDetailResponse response = recipeService.getRecipeDetailById(recipeId);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/toggle-favorite/{memberId}/{recipeId}")
+    @Operation(
+            summary = "레시피 찜/찜 해제 토글",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "레시피 찜 상태 토글 성공"),
+                    @ApiResponse(responseCode = "404", description = "레시피 또는 멤버를 찾을 수 없음")
+            }
+    )
+    public ResponseEntity<?> toggleFavoriteRecipe(@PathVariable Long memberId, @PathVariable Long recipeId) {
+        try {
+            boolean isFavorited = recipeService.toggleFavoriteRecipe(memberId, recipeId);
+            String message = isFavorited ? "찜 상태로 바뀌었습니다." : "찜 상태가 해제되었습니다.";
+            return ResponseEntity.ok().body(FavoriteRecipeToggleResponse.builder().success(true).message(message).build());
+        } catch (CustomException e) {
+            return ResponseEntity.status(e.getExceptionCode().getStatus()).body(FavoriteRecipeToggleResponse.builder().success(false).message(e.getMessage()).build());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(FavoriteRecipeToggleResponse.builder().success(false).message(ExceptionCode.INTERNAL_SERVER_ERROR.getMessage()).build());
+        }
     }
 
 }

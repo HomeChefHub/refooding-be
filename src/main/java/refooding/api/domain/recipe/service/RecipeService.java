@@ -230,7 +230,7 @@ public class RecipeService {
 
     // 레시피 찜/찜 해제
     @Transactional
-    public void toggleFavoriteRecipe(Long memberId, Long recipeId) {
+    public boolean toggleFavoriteRecipe(Long memberId, Long recipeId) {
 
         Optional<FavoriteRecipe> favoriteOptional = favoriteRecipeRepository.findByMemberIdAndRecipeId(memberId, recipeId);
 
@@ -240,9 +240,11 @@ public class RecipeService {
             // 현재 찜 상태라면, 찜 해제
             if (favoriteRecipe.getDeletedDate() == null) {
                 favoriteRecipe.delete();
+                return false;
             } else {
                 // 현재 찜 해제 상태라면, 찜 상태로 전환
                 favoriteRecipe.unDelete();
+                return true;
             }
         } else {
             // 찜 목록에 없는 경우(favorite_recipe 테이블에 없는 경우), 새로 favoriteRecipe 엔티티 생성 후, 바로 찜 상태로 설정
@@ -261,6 +263,7 @@ public class RecipeService {
             newFavorite.changeRecipe(recipe);
 
             favoriteRecipeRepository.save(newFavorite);
+            return true;
         }
     }
 
