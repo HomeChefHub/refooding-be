@@ -86,15 +86,9 @@ public class RecipeController {
             }
     )
     public ResponseEntity<?> toggleFavoriteRecipe(@PathVariable Long memberId, @PathVariable Long recipeId) {
-        try {
             boolean isFavorited = recipeService.toggleFavoriteRecipe(memberId, recipeId);
             String message = isFavorited ? "찜 상태로 바뀌었습니다." : "찜 상태가 해제되었습니다.";
             return ResponseEntity.ok().body(FavoriteRecipeToggleResponse.builder().success(true).message(message).build());
-        } catch (CustomException e) {
-            return ResponseEntity.status(e.getExceptionCode().getStatus()).body(FavoriteRecipeToggleResponse.builder().success(false).message(e.getMessage()).build());
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(FavoriteRecipeToggleResponse.builder().success(false).message(ExceptionCode.INTERNAL_SERVER_ERROR.getMessage()).build());
-        }
     }
 
     @GetMapping("/members/{memberId}/favorites")
