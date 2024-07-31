@@ -85,7 +85,7 @@ public class RecipeController {
                     @ApiResponse(responseCode = "404", description = "레시피 또는 멤버를 찾을 수 없음")
             }
     )
-    public ResponseEntity<?> toggleFavoriteRecipe(@PathVariable Long memberId, @PathVariable Long recipeId) {
+    public ResponseEntity<FavoriteRecipeToggleResponse> toggleFavoriteRecipe(@PathVariable Long memberId, @PathVariable Long recipeId) {
             boolean isFavorited = recipeService.toggleFavoriteRecipe(memberId, recipeId);
             String message = isFavorited ? "찜 상태로 바뀌었습니다." : "찜 상태가 해제되었습니다.";
             return ResponseEntity.ok().body(FavoriteRecipeToggleResponse.builder().success(true).message(message).build());
