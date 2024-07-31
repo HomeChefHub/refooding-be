@@ -228,7 +228,12 @@ public class RecipeService {
 
     // == 레시피 찜 기능 == //
 
-    // 레시피 찜/찜 해제
+    /**
+     * 레시피 찜/찜 해제 토글
+     * @param memberId
+     * @param recipeId
+     * @return
+     */
     @Transactional
     public boolean toggleFavoriteRecipe(Long memberId, Long recipeId) {
 
@@ -267,5 +272,27 @@ public class RecipeService {
         }
     }
 
+    /**
+     * member별 레시피 찜 리스트 조회
+     * @param memberId
+     * @param pageable
+     * @return
+     */
+    public Slice<RecipeResponse> getFavoriteRecipesByMemberId(Long memberId, Pageable pageable) {
+        List<Long> recipeIds = favoriteRecipeRepository.findRecipeIdsByMemberId(memberId);
+
+        Slice<Recipe> findRecipes = recipeRepository.findAllRecipesByIds(recipeIds, pageable);
+        // DTO 변환
+        List<RecipeResponse> recipeResponses = findRecipes.getContent().stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .toList();
+
+        // Slice로 변환 후 반환
+        return new SliceImpl<>(recipeResponses, pageable, findRecipes.hasNext());
+    }
 
 }

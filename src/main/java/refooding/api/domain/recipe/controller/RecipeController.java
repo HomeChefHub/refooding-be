@@ -97,4 +97,17 @@ public class RecipeController {
         }
     }
 
+    @GetMapping("/members/{memberId}/favorites")
+    @Operation(
+            summary = "멤버별 찜한 레시피 목록 조회",
+            responses = {
+            @ApiResponse(responseCode = "200", description = "찜 목록 조회 성공")
+    })
+    public ResponseEntity<Slice<RecipeResponse>> getFavoriteRecipesByMemberId(@PathVariable Long memberId,
+                                                                              @RequestParam(defaultValue = "0") int page,
+                                                                              @RequestParam(defaultValue = "5") int size) {
+        Slice<RecipeResponse> favoriteRecipes = recipeService.getFavoriteRecipesByMemberId(memberId, PageRequest.of(page, size));
+        return ResponseEntity.ok(favoriteRecipes);
+    }
+
 }
