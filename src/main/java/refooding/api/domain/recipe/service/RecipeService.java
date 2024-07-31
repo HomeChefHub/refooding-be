@@ -8,11 +8,16 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import refooding.api.common.exception.CustomException;
+import refooding.api.common.exception.ExceptionCode;
+import refooding.api.domain.member.entity.Member;
+import refooding.api.domain.member.repository.MemberRepository;
 import refooding.api.domain.recipe.dto.ManualResponse;
 import refooding.api.domain.recipe.dto.RecipeDetailResponse;
 import refooding.api.domain.recipe.dto.RecipeIngredientResponse;
 import refooding.api.domain.recipe.dto.RecipeResponse;
 import refooding.api.domain.recipe.entity.*;
+import refooding.api.domain.recipe.repository.FavoriteRecipeRepository;
 import refooding.api.domain.recipe.repository.IngredientRepository;
 import refooding.api.domain.recipe.repository.RecipeRepository;
 
@@ -30,6 +35,10 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
 
     private final IngredientRepository ingredientRepository;
+
+    private final FavoriteRecipeRepository favoriteRecipeRepository;
+
+    private final MemberRepository memberRepository;
 
     @PostConstruct
     public void init() {
@@ -217,5 +226,73 @@ public class RecipeService {
     }
 
 
+    // == 레시피 찜 기능 == //
+
+    /**
+     * 레시피 찜/찜 해제 토글
+     * @param memberId
+     * @param recipeId
+     * @return
+     */
+    @Transactional
+    public boolean toggleFavoriteRecipe(Long memberId, Long recipeId) {
+
+        Optional<FavoriteRecipe> favoriteOptional = favoriteRecipeRepository.findByMemberIdAndRecipeId(memberId, recipeId);
+
+        if (favoriteOptional.isPresent()) {
+            // 찜이 이미 존재한다면, 상태를 토글
+            FavoriteRecipe favoriteRecipe = favoriteOptional.get();
+            // 현재 찜 상태라면, 찜 해제
+            if (favoriteRecipe.getDeletedDate() == null) {
+                favoriteRecipe.delete();
+                return false;
+            } else {
+                // 현재 찜 해제 상태라면, 찜 상태로 전환
+                favoriteRecipe.unDelete();
+                return true;
+            }
+        } else {
+            // 찜 목록에 없는 경우(favorite_recipe 테이블에 없는 경우), 새로 favoriteRecipe 엔티티 생성 후, 바로 찜 상태로 설정
+            Member member = memberRepository.findById(memberId)
+                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
+            Recipe recipe = recipeRepository.findById(recipeId)
+                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_RECIPE));
+            // FavoriteRecipe 생성
+            FavoriteRecipe newFavorite = FavoriteRecipe.builder()
+                    .member(member)
+                    .recipe(recipe)
+                    .build();
+
+            // 연관관계 설정
+            newFavorite.changeMember(member);
+            newFavorite.changeRecipe(recipe);
+
+            favoriteRecipeRepository.save(newFavorite);
+            return true;
+        }
+    }
+
+    /**
+     * member별 레시피 찜 리스트 조회
+     * @param memberId
+     * @param pageable
+     * @return
+     */
+    public Slice<RecipeResponse> getFavoriteRecipesByMemberId(Long memberId, Pageable pageable) {
+        List<Long> recipeIds = favoriteRecipeRepository.findRecipeIdsByMemberId(memberId);
+
+        Slice<Recipe> findRecipes = recipeRepository.findAllRecipesByIds(recipeIds, pageable);
+        // DTO 변환
+        List<RecipeResponse> recipeResponses = findRecipes.getContent().stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .toList();
+
+        // Slice로 변환 후 반환
+        return new SliceImpl<>(recipeResponses, pageable, findRecipes.hasNext());
+    }
 
 }
