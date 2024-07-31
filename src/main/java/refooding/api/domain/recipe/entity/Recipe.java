@@ -69,14 +69,4 @@ public class Recipe extends BaseTimeEntity {
         recipeIngredient.changeRecipe(this);
     }
 
-    /**
-     * Recipe, FavoriteRecipe 연관관계 설정 메솓,
-     * @param favoriteRecipe
-     * @param member
-     */
-    public void addFavoriteRecipe(FavoriteRecipe favoriteRecipe, Member member) {
-        favoriteRecipeList.add(favoriteRecipe);
-        favoriteRecipe.changeMember(member);
-        favoriteRecipe.changeRecipe(this);
-    }
 }

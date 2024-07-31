@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 import refooding.api.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +31,14 @@ public class FavoriteRecipe extends BaseTimeEntity {
     public FavoriteRecipe(Member member, Recipe recipe) {
         this.member = member;
         this.recipe = recipe;
+    }
+
+    public void delete(){
+        this.deletedDate = LocalDateTime.now();
+    }
+
+    public void unDelete() {
+        this.deletedDate = null;
     }
 
     // == 연관관계 편의 메소드 == //
