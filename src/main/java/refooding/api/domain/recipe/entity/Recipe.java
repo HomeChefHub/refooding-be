@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
+import refooding.api.domain.member.entity.Member;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,6 +37,10 @@ public class Recipe extends BaseTimeEntity {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true) // Recipe 엔티티 삭제시 해당 엔티티의 PK를 FK로 가지고 있는 recipeIngredient도 삭제
     private Set<RecipeIngredient> recipeIngredientList = new HashSet<>();
 
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true) // Recipe 엔티티 삭제시 해당 엔티티의 PK를 FK로 가지고 있는 favoriteRecipe도 삭제
+    private Set<FavoriteRecipe> favoriteRecipeList = new HashSet<>();
+
+
     @Builder
     public Recipe(String name, String tip, String mainIngredientName, String mainImgSrc) {
         this.name = name;
@@ -62,5 +67,16 @@ public class Recipe extends BaseTimeEntity {
     public void addRecipeIngredient(RecipeIngredient recipeIngredient) {
         recipeIngredientList.add(recipeIngredient);
         recipeIngredient.changeRecipe(this);
+    }
+
+    /**
+     * Recipe, FavoriteRecipe 연관관계 설정 메솓,
+     * @param favoriteRecipe
+     * @param member
+     */
+    public void addFavoriteRecipe(FavoriteRecipe favoriteRecipe, Member member) {
+        favoriteRecipeList.add(favoriteRecipe);
+        favoriteRecipe.changeMember(member);
+        favoriteRecipe.changeRecipe(this);
     }
 }
