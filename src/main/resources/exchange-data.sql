@@ -1,6 +1,6 @@
-INSERT INTO Region (name) VALUES ('서울');
-INSERT INTO Region (name) VALUES ('경기');
-INSERT INTO Region (name) VALUES ('인천');
+INSERT INTO Region (name) VALUES ('서울특별시');
+INSERT INTO Region (name) VALUES ('경기도');
+INSERT INTO Region (name) VALUES ('인천광역시');
 INSERT INTO Region (name) VALUES ('대전광역시');
 INSERT INTO Region (name) VALUES ('대구광역시');
 INSERT INTO Region (name) VALUES ('부산광역시');
