@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Builder
-public class MemberIngredientRequest {
-    private Long memberId;
+public class MemberIngredientUpdateRequest {
+    private Long requestMemberId; // 업데이트 요청하는 member의 id
     private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;

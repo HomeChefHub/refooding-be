@@ -54,4 +54,13 @@ public class MemberIngredient extends BaseTimeEntity {
     public void changeIngredient(Ingredient ingredient) {
         this.ingredient = ingredient;
     }
+
+    // 유통기한 변경 메소드
+    public void changeStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public void changeEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
+    }
 }
