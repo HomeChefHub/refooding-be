@@ -10,6 +10,8 @@ import refooding.api.domain.refrigerator.dto.MemberIngredientResponse;
 import refooding.api.domain.refrigerator.dto.MemberIngredientUpdateRequest;
 import refooding.api.domain.refrigerator.service.MemberIngredientService;
 
+import java.util.List;
+
 @Tag(name = "냉장고 API")
 @RestController
 @RequestMapping("/refrigerator")
@@ -46,5 +48,12 @@ public class MemberIngredientController {
         MemberIngredientResponse response = memberIngredientService.getMemberIngredient(memberIngredientId);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/members/{memberId}")
+    public ResponseEntity<List<MemberIngredientResponse>> getMemberIngredients(@PathVariable Long memberId) {
+        List<MemberIngredientResponse> responses = memberIngredientService.getMemberIngredients(memberId);
+        return ResponseEntity.ok(responses);
+    }
+
 
 }

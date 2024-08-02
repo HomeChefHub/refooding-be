@@ -11,9 +11,9 @@ import java.util.Optional;
 
 public interface MemberIngredientRepository extends JpaRepository<MemberIngredient, Long> {
 
-    @Query("select mi.ingredient from MemberIngredient mi where mi.member.id = :memberId and mi.deletedDate is null")
-    List<Ingredient> findIngredientsByMemberId(Long memberId);
-
-    @Query("select mi from MemberIngredient mi join fetch mi.ingredient where mi.id = :id")
+    @Query("select mi from MemberIngredient mi join fetch mi.ingredient where mi.id = :id and mi.deletedDate is null")
     Optional<MemberIngredient> findByIdWithIngredient(Long id);
+
+    @Query("select mi from MemberIngredient mi join fetch mi.ingredient where mi.member.id = :memberId and mi.deletedDate is null")
+    List<MemberIngredient> findByMemberIdWithIngredients(Long memberId);
 }

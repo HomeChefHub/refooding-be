@@ -105,11 +105,17 @@ public class MemberIngredientService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER_INGREDIENT));
     }
 
-
-
-
-    public List<Ingredient> getIngredientsByMemberId(Long memberId, Pageable pageable) {
-        return memberIngredientRepository.findIngredientsByMemberId(memberId);
+    public List<MemberIngredientResponse> getMemberIngredients(Long memberId) {
+        // 존재하지 않는 member의 id로 조회할 경우 예외 처리
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
+        return memberIngredientRepository.findByMemberIdWithIngredients(memberId).stream()
+                .map(mi -> MemberIngredientResponse.builder()
+                        .name(mi.getIngredient().getName())
+                        .startDate(mi.getStartDate())
+                        .endDate(mi.getEndDate())
+                        .build())
+                .toList();
     }
 
 
