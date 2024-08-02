@@ -10,6 +10,7 @@ import refooding.api.domain.member.repository.MemberRepository;
 import refooding.api.domain.recipe.entity.Ingredient;
 import refooding.api.domain.recipe.repository.IngredientRepository;
 import refooding.api.domain.refrigerator.dto.MemberIngredientCreateRequest;
+import refooding.api.domain.refrigerator.dto.MemberIngredientDeleteRequest;
 import refooding.api.domain.refrigerator.dto.MemberIngredientUpdateRequest;
 import refooding.api.domain.refrigerator.entity.MemberIngredient;
 import refooding.api.domain.refrigerator.repository.MemberIngredientRepository;
@@ -78,6 +79,20 @@ public class MemberIngredientService {
         memberIngredient.changeEndDate(request.getEndDate());
 
     }
+
+    @Transactional
+    public void deleteMemberIngredient(Long memberIngredientId, MemberIngredientDeleteRequest request) {
+        MemberIngredient memberIngredient = memberIngredientRepository.findById(memberIngredientId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER_INGREDIENT));
+
+        // 업데이트 요청 memberId와 MemberIngredient의 memberId가 일치하는지 검증
+        if (!memberIngredient.getMember().getId().equals(request.getRequestMemberId())) {
+            throw new CustomException(ExceptionCode.UNAUTHORIZED);
+        }
+        // 논리 삭제 실행
+        memberIngredient.delete();
+    }
+
 
     public List<Ingredient> getIngredientsByMemberId(Long memberId, Pageable pageable) {
         return memberIngredientRepository.findIngredientsByMemberId(memberId);
