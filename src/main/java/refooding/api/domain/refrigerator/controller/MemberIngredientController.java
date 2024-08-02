@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import refooding.api.domain.refrigerator.dto.MemberIngredientCreateRequest;
 import refooding.api.domain.refrigerator.dto.MemberIngredientDeleteRequest;
+import refooding.api.domain.refrigerator.dto.MemberIngredientResponse;
 import refooding.api.domain.refrigerator.dto.MemberIngredientUpdateRequest;
 import refooding.api.domain.refrigerator.service.MemberIngredientService;
 
@@ -38,6 +39,12 @@ public class MemberIngredientController {
         memberIngredientService.deleteMemberIngredient(memberIngredientId, request);
 
         return ResponseEntity.ok("MemberIngredient deleted with ID: " + memberIngredientId);
+    }
+
+    @GetMapping("/{memberIngredientId}")
+    public ResponseEntity<MemberIngredientResponse> getMemberIngredient(@PathVariable Long memberIngredientId) {
+        MemberIngredientResponse response = memberIngredientService.getMemberIngredient(memberIngredientId);
+        return ResponseEntity.ok(response);
     }
 
 }
