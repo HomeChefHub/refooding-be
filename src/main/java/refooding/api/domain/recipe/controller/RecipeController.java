@@ -104,4 +104,18 @@ public class RecipeController {
         return ResponseEntity.ok(favoriteRecipes);
     }
 
+
+    @GetMapping("/members/{memberId}/recommends")
+    @Operation(
+            summary = "멤버별 추천 레시피 목록 조회",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "추천 목록 조회 성공")
+            })
+    public ResponseEntity<Slice<RecipeResponse>> getRecommendRecipesByMemberId(@PathVariable Long memberId,
+                                                                              @RequestParam(defaultValue = "0") int page,
+                                                                              @RequestParam(defaultValue = "5") int size) {
+        Slice<RecipeResponse> recommendRecipes = recipeService.getRecommendedRecipesByMemberId(memberId, PageRequest.of(page, size));
+        return ResponseEntity.ok(recommendRecipes);
+    }
+
 }

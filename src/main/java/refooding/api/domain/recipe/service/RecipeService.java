@@ -20,12 +20,15 @@ import refooding.api.domain.recipe.entity.*;
 import refooding.api.domain.recipe.repository.FavoriteRecipeRepository;
 import refooding.api.domain.recipe.repository.IngredientRepository;
 import refooding.api.domain.recipe.repository.RecipeRepository;
+import refooding.api.domain.refrigerator.entity.MemberIngredient;
+import refooding.api.domain.refrigerator.repository.MemberIngredientRepository;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,6 +42,8 @@ public class RecipeService {
     private final FavoriteRecipeRepository favoriteRecipeRepository;
 
     private final MemberRepository memberRepository;
+
+    private final MemberIngredientRepository memberIngredientRepository;
 
     @PostConstruct
     public void init() {
@@ -160,6 +165,43 @@ public class RecipeService {
                         .imgSrc(recipe.getMainImgSrc())
                         .build())
                 .toList();
+
+        // Slice로 변환 후 반환
+        return new SliceImpl<>(recipeResponses, pageable, findRecipes.hasNext());
+    }
+
+    // Member가 가지고 있는 냉장고 재료 기준(유통기한 짧은 순) 추천 레시피 리스트 조회 기능
+    // 리팩토링 필요
+    public Slice<RecipeResponse> getRecommendedRecipesByMemberId(Long memberId, Pageable pageable) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
+
+        // 멤버의 유효한 재료들을 유통기한 순으로 조회
+        List<MemberIngredient> ingredients = memberIngredientRepository.findActiveIngredientsByMemberIdOrderedByEndDate(memberId);
+
+        // 재료 이름 추출 및 재료 ID와 최소 유통기한 매핑
+        Map<String, LocalDateTime> ingredientMinEndDateMap = ingredients.stream()
+                .collect(Collectors.toMap(
+                        ingredient -> ingredient.getIngredient().getName(),
+                        MemberIngredient::getEndDate,
+                        (existing, replacement) -> existing.isBefore(replacement) ? existing : replacement // 중복 키 처리
+                ));
+
+        // 재료 이름을 기반으로 레시피 조회
+        Slice<Recipe> findRecipes = recipeRepository.findByMainIngredientNames(new ArrayList<>(ingredientMinEndDateMap.keySet()), pageable);
+
+        // 조회된 레시피를 유통기한에 따라 정렬
+        List<Recipe> sortedRecipes = new ArrayList<>(findRecipes.getContent());
+        sortedRecipes.sort(Comparator.comparing(recipe -> ingredientMinEndDateMap.getOrDefault(recipe.getMainIngredientName(), LocalDateTime.MAX)));
+
+        // DTO 변환
+        List<RecipeResponse> recipeResponses = sortedRecipes.stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .collect(Collectors.toList());
 
         // Slice로 변환 후 반환
         return new SliceImpl<>(recipeResponses, pageable, findRecipes.hasNext());
@@ -294,5 +336,6 @@ public class RecipeService {
         // Slice로 변환 후 반환
         return new SliceImpl<>(recipeResponses, pageable, findRecipes.hasNext());
     }
+
 
 }

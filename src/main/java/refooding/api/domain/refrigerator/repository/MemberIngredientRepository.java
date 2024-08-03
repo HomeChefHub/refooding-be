@@ -16,4 +16,7 @@ public interface MemberIngredientRepository extends JpaRepository<MemberIngredie
 
     @Query("select mi from MemberIngredient mi join fetch mi.ingredient where mi.member.id = :memberId and mi.deletedDate is null")
     List<MemberIngredient> findByMemberIdWithIngredients(Long memberId);
+
+    @Query("select mi from MemberIngredient mi where mi.member.id = :memberId and mi.deletedDate is null order by mi.endDate asc")
+    List<MemberIngredient> findActiveIngredientsByMemberIdOrderedByEndDate(Long memberId);
 }
