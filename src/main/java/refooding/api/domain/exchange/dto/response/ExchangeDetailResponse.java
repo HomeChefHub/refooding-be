@@ -16,6 +16,12 @@ public record ExchangeDetailResponse(
         @Schema(description = "내용")
         String content,
 
+        @Schema(description = "작성자 아이디")
+        Long memberId,
+  
+        @Schema(description = "작성자 닉네임")
+        String username,
+  
         @Schema(description = "상위 지역 이름")
         String region,
 
@@ -27,7 +33,6 @@ public record ExchangeDetailResponse(
 
         @Schema(description = "생성 시간")
         LocalDateTime createDate
-        // 회원 추가
         // 이미지 추가
 ) {
     public static ExchangeDetailResponse from(Exchange exchange) {
@@ -35,6 +40,8 @@ public record ExchangeDetailResponse(
                 exchange.getId(),
                 exchange.getTitle(),
                 exchange.getContent(),
+                exchange.getMember().getId(),
+                exchange.getMember().getName(),
                 exchange.getRegion().getParent().getName(),
                 exchange.getRegion().getName(),
                 exchange.getStatus(),

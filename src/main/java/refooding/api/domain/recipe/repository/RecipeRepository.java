@@ -24,4 +24,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
     @Query("select r from Recipe r where r.mainIngredientName in :ingredientNames")
     Slice<Recipe> findByMainIngredientNames(List<String> ingredientNames, Pageable pageable);
+
+    @Query("SELECT r FROM Recipe r WHERE r.id IN :recipeIds")
+    Slice<Recipe> findAllRecipesByIds(List<Long> recipeIds, Pageable pageable);  // 메소드 이름 변경 및 Slice 반환
 }
