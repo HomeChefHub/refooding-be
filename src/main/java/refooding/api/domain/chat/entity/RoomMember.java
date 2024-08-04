@@ -25,24 +25,24 @@ public class RoomMember extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private RoomMemberState state;
+    private RoomMemberStatus status;
 
     public RoomMember(Member member, Room room) {
         this.member = member;
         this.room = room;
-        this.state = RoomMemberState.JOIN;
+        this.status = RoomMemberStatus.JOIN;
     }
 
     public void join() {
-        this.state = RoomMemberState.JOIN;
+        this.status = RoomMemberStatus.JOIN;
     }
 
     public boolean isJoin() {
-        return this.state == RoomMemberState.JOIN;
+        return this.status == RoomMemberStatus.JOIN;
     }
 
     public void exit() {
-        this.state = RoomMemberState.EXIT;
+        this.status = RoomMemberStatus.EXIT;
     }
 
 }

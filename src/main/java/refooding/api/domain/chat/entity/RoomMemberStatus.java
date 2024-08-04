@@ -1,5 +1,5 @@
 package refooding.api.domain.chat.entity;
 
-public enum RoomMemberState {
+public enum RoomMemberStatus {
     JOIN, EXIT
 }
