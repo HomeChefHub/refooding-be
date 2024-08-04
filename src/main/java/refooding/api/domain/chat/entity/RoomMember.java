@@ -10,7 +10,7 @@ import refooding.api.domain.member.entity.Member;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class JoinRoom extends BaseTimeEntity {
+public class RoomMember extends BaseTimeEntity {
     @Id
     @GeneratedValue
     private Long id;
@@ -23,8 +23,26 @@ public class JoinRoom extends BaseTimeEntity {
     @JoinColumn(name = "room_id")
     private Room room;
 
-    public JoinRoom(Member member, Room room) {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoomMemberState state;
+
+    public RoomMember(Member member, Room room) {
         this.member = member;
         this.room = room;
+        this.state = RoomMemberState.JOIN;
     }
+
+    public void join() {
+        this.state = RoomMemberState.JOIN;
+    }
+
+    public boolean isJoin() {
+        return this.state == RoomMemberState.JOIN;
+    }
+
+    public void exit() {
+        this.state = RoomMemberState.EXIT;
+    }
+
 }

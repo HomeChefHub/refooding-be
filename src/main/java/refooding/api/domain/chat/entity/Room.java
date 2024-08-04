@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "chat_room")
 public class Room extends BaseTimeEntity {
 
     @Id
@@ -33,6 +34,5 @@ public class Room extends BaseTimeEntity {
     public void updateMessage(Message message) {
         messages.add(message);
     }
-
 
 }

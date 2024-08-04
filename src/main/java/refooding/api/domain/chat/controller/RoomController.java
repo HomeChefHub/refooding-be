@@ -4,13 +4,16 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import refooding.api.domain.chat.dto.request.RoomCreateRequest;
+import refooding.api.domain.chat.dto.response.RoomResponse;
 import refooding.api.domain.chat.service.RoomService;
 
 import java.net.URI;
+import java.util.List;
 
 @Controller
 @RequestMapping("/chat/rooms")
@@ -26,5 +29,14 @@ public class RoomController implements RoomControllerOpenApi{
         Long roomId = roomService.getOrCreate(request);
         return ResponseEntity.created(URI.create("/chat/rooms/" + roomId)).build();
     }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<List<RoomResponse>> getJoinRooms() {
+        // TODO : 인증 추가
+        List<RoomResponse> response = roomService.getRoomListByMemberId();
+        return ResponseEntity.ok(response);
+    }
+
 
 }

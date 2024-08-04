@@ -7,9 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
 import refooding.api.domain.chat.dto.request.RoomCreateRequest;
-import refooding.api.domain.chat.entity.JoinRoom;
+import refooding.api.domain.chat.dto.response.RoomResponse;
 import refooding.api.domain.chat.entity.Room;
-import refooding.api.domain.chat.repository.JoinRoomRepository;
+import refooding.api.domain.chat.entity.RoomMember;
+import refooding.api.domain.chat.repository.MessageRepository;
+import refooding.api.domain.chat.repository.RoomMemberRepository;
 import refooding.api.domain.chat.repository.RoomRepository;
 import refooding.api.domain.exchange.entity.Exchange;
 import refooding.api.domain.exchange.repository.ExchangeRepository;
@@ -28,8 +30,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoomServiceImpl implements RoomService {
 
-    private final JoinRoomRepository joinRoomRepository;
+    private final RoomMemberRepository roomMemberRepository;
     private final RoomRepository roomRepository;
+    private final MessageRepository messageRepository;
     private final MemberRepository memberRepository;
     private final ExchangeRepository exchangeRepository;
 
@@ -58,20 +61,41 @@ public class RoomServiceImpl implements RoomService {
         List<Long> memberIds = new ArrayList<>();
         memberIds.add(inviterId);
         memberIds.add(receiver.getId());
-        return findExistingRoomIdByMemberIdsAndExchangeId(memberIds, exchangeId)
+        return getExistingRoomIdByMemberIdsAndExchangeId(memberIds, exchangeId)
                 .orElseGet(() -> createRoom(inviter, receiver, exchangeId));
+    }
+
+    @Override
+    public List<RoomResponse> getRoomListByMemberId() {
+        // TODO : 회원 도메인 구현시 적용
+        // 임시 회원 아이디
+        Long memberId = 1L;
+        List<Long> joinedRoomsIds = roomMemberRepository.findAllJoinedRoomsByMemberId(memberId)
+                .stream()
+                .map(roomMember -> roomMember.getRoom().getId())
+                .toList();
+
+        return messageRepository.findLatestMessageWithSenderByRoomId(joinedRoomsIds)
+                .stream()
+                .map(message ->  new RoomResponse(
+                            message.getRoom().getId(),
+                            message.getSender().getId(),
+                            message.getSender().getName(),
+                            message.getContent()
+                    ))
+                .toList();
     }
 
     /**
      * 채팅을 요청하는 회원과 채팅을 초대받는 회원의 기존 채팅방이 있는지 확인
      */
-    private Optional<Long> findExistingRoomIdByMemberIdsAndExchangeId(List<Long> ids, Long exchangeId){
-        Map<Long, List<JoinRoom>> joinRoomsMap = joinRoomRepository.findAllByMemberIdsInAndExchangeId(ids, exchangeId)
+    private Optional<Long> getExistingRoomIdByMemberIdsAndExchangeId(List<Long> ids, Long exchangeId){
+        Map<Long, List<RoomMember>> joinRoomsMap = roomMemberRepository.findAllByMemberIdsInAndExchangeId(ids, exchangeId)
                 .stream()
                 .collect(Collectors.groupingBy(joinRoom -> joinRoom.getRoom().getId()));
 
         for (Long roomId : joinRoomsMap.keySet()) {
-            List<JoinRoom> joinRooms = joinRoomsMap.get(roomId);
+            List<RoomMember> joinRooms = joinRoomsMap.get(roomId);
             if (joinRooms.size() == ids.size()) {
                 return Optional.of(roomId);
             }
@@ -87,8 +111,8 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_EXCHANGE));
         Room room = new Room(exchange);
         roomRepository.save(room);
-        joinRoomRepository.save(new JoinRoom(inviter, room));
-        joinRoomRepository.save(new JoinRoom(receiver, room));
+        roomMemberRepository.save(new RoomMember(inviter, room));
+        roomMemberRepository.save(new RoomMember(receiver, room));
         return room.getId();
     }
 
