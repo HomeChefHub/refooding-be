@@ -4,10 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import refooding.api.domain.chat.dto.request.RoomCreateRequest;
 import refooding.api.domain.chat.dto.response.RoomResponse;
 import refooding.api.domain.chat.service.RoomService;
@@ -15,7 +12,7 @@ import refooding.api.domain.chat.service.RoomService;
 import java.net.URI;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/chat/rooms")
 @RequiredArgsConstructor
 public class RoomController implements RoomControllerOpenApi{

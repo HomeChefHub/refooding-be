@@ -34,10 +34,6 @@ public interface RoomControllerOpenApi {
                     )
             }
     )
-    @Parameter(
-            name = "size",
-            description = "채팅방 목록 요청 갯수(0개 이상~50개 이하)"
-    )
     ResponseEntity<List<RoomResponse>> getJoinRooms();
 
 }
