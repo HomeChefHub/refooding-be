@@ -35,11 +35,11 @@ public class MessageServiceImpl implements MessageService{
 
         Member sender = memberRepository.findByIdAndDeletedDateIsNull(request.senderId())
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
-        Room findRoom = roomRepository.findById(request.roomId())
+        Room findRoom = roomRepository.findRoomById(request.roomId())
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CHAT_ROOM));
 
         // 메시지 발신 회원이 해당 채팅방에 참여중인 회원인지 확인
-        joinRoomRepository.findJoinRoomByMemberAndRoom(sender, findRoom)
+        joinRoomRepository.findJoinRoomByMemberIdAndRoomId(sender.getId(), findRoom.getId())
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CHAT_ROOM));
 
         Message message = request.toMessage(sender, findRoom);

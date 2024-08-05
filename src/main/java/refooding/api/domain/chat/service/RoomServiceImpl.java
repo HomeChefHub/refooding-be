@@ -10,6 +10,7 @@ import refooding.api.domain.chat.dto.request.RoomCreateRequest;
 import refooding.api.domain.chat.dto.response.RoomResponse;
 import refooding.api.domain.chat.entity.Room;
 import refooding.api.domain.chat.entity.RoomMember;
+import refooding.api.domain.chat.entity.RoomMemberStatus;
 import refooding.api.domain.chat.repository.MessageRepository;
 import refooding.api.domain.chat.repository.RoomMemberRepository;
 import refooding.api.domain.chat.repository.RoomRepository;
@@ -79,7 +80,7 @@ public class RoomServiceImpl implements RoomService {
                 // TODO : 에러처리
                 .orElseThrow(() -> new CustomException(ExceptionCode.INTERNAL_SERVER_ERROR));
 
-        List<Long> joinedRoomsIds = roomMemberRepository.findAllJoinedRoomsByMemberId(findMember.getId())
+        List<Long> joinedRoomsIds = roomMemberRepository.findRoomMembersJoinedRoomsByMemberId(findMember.getId())
                 .stream()
                 .map(roomMember -> roomMember.getRoom().getId())
                 .toList();
@@ -95,11 +96,55 @@ public class RoomServiceImpl implements RoomService {
                 .toList();
     }
 
+    @Override
+    @Transactional
+    public void exitRoom(Long roomId) {
+
+        // TODO : 회원 도메인 구현시 적용
+        // 임시 회원 아이디
+        Long memberId = 1L;
+        Member findMember = memberRepository.findByIdAndDeletedDateIsNull(memberId)
+                // TODO : 에러처리
+                .orElseThrow(() -> new CustomException(ExceptionCode.INTERNAL_SERVER_ERROR));
+
+        // 채팅방 조회 및 나가기
+        List<RoomMember> findRoomMembers = roomMemberRepository.findRoomMembersByRoomId(roomId);
+        RoomMember exitingMember = findRoomMembers.stream()
+                .filter(roomMember -> findMember.getId().equals(roomMember.getMember().getId()))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CHAT_ROOM));
+        exitingMember.exit();
+
+        // 해당 채팅방을 모든 회원이 나갔다면 채팅방 삭제
+        if (isRoomEmpty(findRoomMembers)) {
+            deleteRoom(exitingMember);
+        }
+
+    }
+
+    private static boolean isRoomEmpty(List<RoomMember> findRoomMembers) {
+        List<RoomMember> joinedRoomMembers = findRoomMembers
+                .stream()
+                .filter(roomMember -> roomMember.getStatus().equals(RoomMemberStatus.JOIN))
+                .toList();
+        return joinedRoomMembers.isEmpty();
+    }
+
+    private void deleteRoom(RoomMember exitingMember) {
+        Room room = exitingMember.getRoom();
+        room.delete();
+        List<Long> roomMembers = roomMemberRepository.findRoomMembersByRoomId(room.getId())
+                .stream()
+                .map(RoomMember::getId)
+                .toList();
+        roomMemberRepository.deleteAllRoomMember(roomMembers);
+    }
+
     /**
      * 채팅을 요청하는 회원과 채팅을 초대받는 회원의 기존 채팅방이 있는지 확인
      */
     private Optional<RoomMember> getExistingRoomIdByMemberIdsAndExchangeId(List<Long> ids, Long inviterId, Long exchangeId){
-        List<RoomMember> roomMembers = roomMemberRepository.findAllByMemberIdsInAndExchangeId(ids, exchangeId);
+        List<RoomMember> roomMembers = roomMemberRepository.findRoomMembersByMemberIdsInAndExchangeId(ids, exchangeId);
         return roomMembers.stream()
                 .filter(roomMember -> inviterId.equals(roomMember.getMember().getId()))
                 .findAny();

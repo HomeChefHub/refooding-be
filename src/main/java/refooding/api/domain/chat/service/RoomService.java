@@ -9,4 +9,6 @@ public interface RoomService {
     Long getOrCreate(RoomCreateRequest request);
 
     List<RoomResponse> getRoomListByMemberId();
+
+    void exitRoom(Long roomId);
 }

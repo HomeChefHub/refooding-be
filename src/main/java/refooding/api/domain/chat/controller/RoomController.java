@@ -35,5 +35,12 @@ public class RoomController implements RoomControllerOpenApi{
         return ResponseEntity.ok(response);
     }
 
+    @Override
+    @DeleteMapping("/{roomId}")
+    public ResponseEntity<Void> exitRoom(@PathVariable Long roomId) {
+        roomService.exitRoom(roomId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

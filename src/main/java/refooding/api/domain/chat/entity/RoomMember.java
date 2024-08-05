@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 import refooding.api.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,6 +45,10 @@ public class RoomMember extends BaseTimeEntity {
 
     public void exit() {
         this.status = RoomMemberStatus.EXIT;
+    }
+
+    public void delete() {
+        this.deletedDate = LocalDateTime.now();
     }
 
 }
