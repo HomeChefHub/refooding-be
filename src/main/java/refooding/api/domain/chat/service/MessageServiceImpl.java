@@ -33,7 +33,7 @@ public class MessageServiceImpl implements MessageService{
     @Transactional
     public void sendMessage(MessageRequest request) {
 
-        Member sender = memberRepository.findById(request.senderId())
+        Member sender = memberRepository.findByIdAndDeletedDateIsNull(request.senderId())
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
         Room findRoom = roomRepository.findById(request.roomId())
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CHAT_ROOM));

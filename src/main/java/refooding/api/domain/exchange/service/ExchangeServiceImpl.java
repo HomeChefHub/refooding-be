@@ -104,7 +104,7 @@ public class ExchangeServiceImpl implements ExchangeService{
     }
 
     private Member getMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedDateIsNull(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
     }
 
