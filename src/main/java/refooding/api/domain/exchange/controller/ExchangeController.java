@@ -49,7 +49,7 @@ public class ExchangeController implements ExchangeControllerOpenApi{
     @Override
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody ExchangeCreateRequest request) {
-        // TODO : 회원 추가
+        // TODO : 인증 추가
         Long exchangeId = exchangeService.create(request);
         return ResponseEntity.created(URI.create("/api/v1/exchanges/" + exchangeId)).build();
     }
@@ -57,7 +57,7 @@ public class ExchangeController implements ExchangeControllerOpenApi{
     @Override
     @PatchMapping("/{exchangeId}")
     public ResponseEntity<Void> update(@PathVariable Long exchangeId, @Valid @RequestBody ExchangeUpdateRequest request){
-        // TODO : 회원 추가
+        // TODO : 인증 추가
         exchangeService.update(exchangeId, request);
         return ResponseEntity.ok().build();
     }
@@ -65,7 +65,7 @@ public class ExchangeController implements ExchangeControllerOpenApi{
     @Override
     @DeleteMapping("/{exchangeId}")
     public ResponseEntity<Void> delete(@PathVariable Long exchangeId) {
-        // TODO : 회원 추가
+        // TODO : 인증 추가
         exchangeService.delete(exchangeId);
         return ResponseEntity.noContent().build();
     }

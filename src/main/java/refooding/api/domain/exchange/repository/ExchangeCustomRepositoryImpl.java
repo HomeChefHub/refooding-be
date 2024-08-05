@@ -22,14 +22,14 @@ import static refooding.api.domain.member.entity.QMember.member;
 @RequiredArgsConstructor
 public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
 
-    private final JPAQueryFactory japQueryFactory;
+    private final JPAQueryFactory jpaQueryFactory;
 
     @Override
     public Slice<ExchangeResponse> findExchangeByCondition(ExchangeSearchCondition condition, Pageable pageable) {
 
         QRegion parentRegion = new QRegion("parent");
 
-        JPAQuery<ExchangeResponse> content = japQueryFactory
+        JPAQuery<ExchangeResponse> content = jpaQueryFactory
                 .select(
                         new QExchangeResponse(
                                 exchange.id,
