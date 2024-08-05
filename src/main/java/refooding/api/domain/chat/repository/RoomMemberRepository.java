@@ -19,6 +19,7 @@ public interface RoomMemberRepository extends JpaRepository<RoomMember, Long> {
 
     @Query("select roomMember " +
             "from RoomMember roomMember " +
+            "left join fetch roomMember.member member " +
             "left join roomMember.room room " +
             "where roomMember.member.id in (:memberIds) " +
             "and room.exchange.id = :exchangeId")

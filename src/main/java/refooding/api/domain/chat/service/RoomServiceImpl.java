@@ -20,9 +20,7 @@ import refooding.api.domain.member.repository.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -58,11 +56,18 @@ public class RoomServiceImpl implements RoomService {
         Member receiver = memberRepository.findByIdAndDeletedDateIsNull(receiverId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
 
-        List<Long> memberIds = new ArrayList<>();
-        memberIds.add(inviterId);
-        memberIds.add(receiver.getId());
-        return getExistingRoomIdByMemberIdsAndExchangeId(memberIds, exchangeId)
-                .orElseGet(() -> createRoom(inviter, receiver, exchangeId));
+        List<Long> ids = new ArrayList<>();
+        ids.add(inviter.getId());
+        ids.add(receiver.getId());
+
+        Optional<RoomMember> findRoomMember = getExistingRoomIdByMemberIdsAndExchangeId(ids, inviter.getId(), exchangeId);
+        if (findRoomMember.isPresent()) {
+            RoomMember roomMember = findRoomMember.get();
+            roomMember.join();
+            return roomMember.getId();
+        }
+
+        return createRoom(inviter, receiver, exchangeId);
     }
 
     @Override
@@ -93,25 +98,19 @@ public class RoomServiceImpl implements RoomService {
     /**
      * 채팅을 요청하는 회원과 채팅을 초대받는 회원의 기존 채팅방이 있는지 확인
      */
-    private Optional<Long> getExistingRoomIdByMemberIdsAndExchangeId(List<Long> ids, Long exchangeId){
-        Map<Long, List<RoomMember>> joinRoomsMap = roomMemberRepository.findAllByMemberIdsInAndExchangeId(ids, exchangeId)
-                .stream()
-                .collect(Collectors.groupingBy(joinRoom -> joinRoom.getRoom().getId()));
+    private Optional<RoomMember> getExistingRoomIdByMemberIdsAndExchangeId(List<Long> ids, Long inviterId, Long exchangeId){
+        List<RoomMember> roomMembers = roomMemberRepository.findAllByMemberIdsInAndExchangeId(ids, exchangeId);
+        return roomMembers.stream()
+                .filter(roomMember -> inviterId.equals(roomMember.getMember().getId()))
+                .findAny();
 
-        for (Long roomId : joinRoomsMap.keySet()) {
-            List<RoomMember> joinRooms = joinRoomsMap.get(roomId);
-            if (joinRooms.size() == ids.size()) {
-                return Optional.of(roomId);
-            }
-        }
-        return Optional.empty();
     }
 
     /**
      * 채팅방 생성
      */
     private Long createRoom(Member inviter, Member receiver, Long exchangeId) {
-        Exchange exchange = exchangeRepository.findById(exchangeId)
+        Exchange exchange = exchangeRepository.findExchangeById(exchangeId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_EXCHANGE));
         Room room = new Room(exchange);
         roomRepository.save(room);
