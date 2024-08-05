@@ -50,7 +50,8 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
                         keywordContains(condition.keyword()),
                         statusEq(condition.status()),
                         regionEq(condition.regionId()),
-                        cursorCondition(condition.lastExchangeId())
+                        cursorCondition(condition.lastExchangeId()),
+                        notDeleted()
                 )
                 .orderBy(exchange.id.desc());
 
@@ -71,6 +72,10 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
 
     private BooleanExpression cursorCondition(Long lastExchangeId){
         return lastExchangeId == null ? null : exchange.id.lt(lastExchangeId);
+    }
+
+    private static BooleanExpression notDeleted() {
+        return exchange.deletedDate.isNull();
     }
 
 
