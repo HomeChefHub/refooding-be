@@ -61,6 +61,22 @@ public class RecipeController {
         }
     }
 
+    @GetMapping("/random")
+    @Operation(
+            summary = "랜덤 레시피 목록 조회",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "추천 목록 조회 성공")
+            })
+    public ResponseEntity<Slice<RecipeResponse>> getRandomRecipes(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        PageRequest pageable = PageRequest.of(page, size);
+        Slice<RecipeResponse> randomRecipes = recipeService.getRandomRecipes(pageable);
+
+        return ResponseEntity.ok(randomRecipes);
+    }
+
     @GetMapping("/{recipeId}")
     @Operation(
             summary = "레시피 상세 조회",
