@@ -3,6 +3,7 @@ package refooding.api.domain.recipe.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
@@ -20,12 +21,15 @@ import refooding.api.domain.recipe.entity.*;
 import refooding.api.domain.recipe.repository.FavoriteRecipeRepository;
 import refooding.api.domain.recipe.repository.IngredientRepository;
 import refooding.api.domain.recipe.repository.RecipeRepository;
+import refooding.api.domain.refrigerator.entity.MemberIngredient;
+import refooding.api.domain.refrigerator.repository.MemberIngredientRepository;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,6 +43,8 @@ public class RecipeService {
     private final FavoriteRecipeRepository favoriteRecipeRepository;
 
     private final MemberRepository memberRepository;
+
+    private final MemberIngredientRepository memberIngredientRepository;
 
     @PostConstruct
     public void init() {
@@ -142,6 +148,76 @@ public class RecipeService {
         return new SliceImpl<>(recipeResponses, pageable, allRecipes.hasNext());
     }
 
+    public Slice<RecipeResponse> getRandomRecipes(Pageable pageable) {
+        // 총 레시피 수를 조회합니다.
+        long totalRecipes = recipeRepository.count();
+        // 페이지 크기에 따른 총 페이지 수를 계산합니다.
+        int totalPages = (int) Math.ceil((double) totalRecipes / pageable.getPageSize());
+
+        // 랜덤 페이지 번호를 생성합니다.
+        int randomPage = new Random().nextInt(totalPages);
+        // 새로운 Pageable 객체를 생성합니다.
+        Pageable randomPageable = PageRequest.of(randomPage, pageable.getPageSize(), pageable.getSort());
+
+        // 랜덤 페이지로 데이터를 조회합니다.
+        Slice<Recipe> allRecipes = recipeRepository.findAllBySlice(randomPageable);
+
+        // DTO 변환
+        List<RecipeResponse> recipeResponses = allRecipes.getContent().stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .toList();
+
+        // Slice로 변환 후 반환
+        return new SliceImpl<>(recipeResponses, randomPageable, allRecipes.hasNext());
+    }
+
+
+
+    /**
+     * Member가 가지고 있는 냉장고 재료 기준(유통기한 짧은 순) 추천 레시피 리스트 조회 기능
+     * @param memberId
+     * @param pageable
+     * @return
+     */
+    // 리팩토링 필요
+    public Slice<RecipeResponse> getRecommendedRecipesByMemberId(Long memberId, Pageable pageable) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
+
+        // 멤버의 유효한 재료들을 유통기한 순으로 조회
+        List<MemberIngredient> ingredients = memberIngredientRepository.findActiveIngredientsByMemberIdOrderedByEndDate(memberId);
+
+        // 재료 이름 추출 및 재료 ID와 최소 유통기한 매핑
+        Map<String, LocalDateTime> ingredientMinEndDateMap = ingredients.stream()
+                .collect(Collectors.toMap(
+                        ingredient -> ingredient.getIngredient().getName(),
+                        MemberIngredient::getEndDate,
+                        (existing, replacement) -> existing.isBefore(replacement) ? existing : replacement // 중복 키 처리
+                ));
+
+        // 재료 이름을 기반으로 레시피 조회
+        Slice<Recipe> findRecipes = recipeRepository.findByMainIngredientNames(new ArrayList<>(ingredientMinEndDateMap.keySet()), pageable);
+
+        // 조회된 레시피를 유통기한에 따라 정렬
+        List<Recipe> sortedRecipes = new ArrayList<>(findRecipes.getContent());
+        sortedRecipes.sort(Comparator.comparing(recipe -> ingredientMinEndDateMap.getOrDefault(recipe.getMainIngredientName(), LocalDateTime.MAX)));
+
+        // DTO 변환
+        List<RecipeResponse> recipeResponses = sortedRecipes.stream()
+                .map(recipe -> RecipeResponse.builder()
+                        .id(recipe.getId())
+                        .name(recipe.getName())
+                        .imgSrc(recipe.getMainImgSrc())
+                        .build())
+                .collect(Collectors.toList());
+
+        // Slice로 변환 후 반환
+        return new SliceImpl<>(recipeResponses, pageable, findRecipes.hasNext());
+    }
 
     /**
      * 재료명으로 레시피 목록 조회
@@ -294,5 +370,6 @@ public class RecipeService {
         // Slice로 변환 후 반환
         return new SliceImpl<>(recipeResponses, pageable, findRecipes.hasNext());
     }
+
 
 }
