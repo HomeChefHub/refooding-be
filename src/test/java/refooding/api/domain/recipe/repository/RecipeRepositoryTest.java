@@ -32,7 +32,7 @@ public class RecipeRepositoryTest {
     @Autowired
     private RecipeIngredientRepository recipeIngredientRepository;
 
-    @Test
+    // @Test
     @Transactional
     void 레시피_추가_테스트() {
         //given

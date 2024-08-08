@@ -72,7 +72,7 @@ class ExchangeRepositoryTest {
         // 지역 검증
         assertThat(findExchange.getRegion().getId()).isEqualTo(17);
         assertThat(findExchange.getRegion().getName()).isEqualTo("강남구");
-        assertThat(findExchange.getRegion().getParent().getName()).isEqualTo("서울");
+        assertThat(findExchange.getRegion().getParent().getName()).isEqualTo("서울특별시");
 
         // 회원 검증
         assertThat(findExchange.getMember().getId()).isEqualTo(savedMember.getId());
