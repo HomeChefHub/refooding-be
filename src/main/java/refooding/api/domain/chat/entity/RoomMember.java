@@ -29,6 +29,10 @@ public class RoomMember extends BaseTimeEntity {
     @Column(nullable = false)
     private RoomMemberStatus status;
 
+    private LocalDateTime joinedTime;
+
+    private LocalDateTime lastReadTime;
+
     public RoomMember(Member member, Room room) {
         this.member = member;
         this.room = room;
@@ -49,6 +53,10 @@ public class RoomMember extends BaseTimeEntity {
 
     public void delete() {
         this.deletedDate = LocalDateTime.now();
+    }
+
+    public void updateLastReadTime() {
+        this.lastReadTime = LocalDateTime.now();
     }
 
 }

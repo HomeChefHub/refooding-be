@@ -19,7 +19,7 @@ public class MessageCustomRepositoryImpl implements MessageCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<Message> findLatestMessageWithSenderByRoomId(List<Long> roomIds) {
+    public List<Message> findLatestMessagesByRoomIds(List<Long> roomIds) {
 
         QMessage subMessage = new QMessage("subMessage");
 

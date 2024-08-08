@@ -8,6 +8,7 @@ import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
 import refooding.api.domain.chat.dto.request.RoomCreateRequest;
 import refooding.api.domain.chat.dto.response.RoomResponse;
+import refooding.api.domain.chat.entity.Message;
 import refooding.api.domain.chat.entity.Room;
 import refooding.api.domain.chat.entity.RoomMember;
 import refooding.api.domain.chat.entity.RoomMemberStatus;
@@ -21,7 +22,10 @@ import refooding.api.domain.member.repository.MemberRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -80,19 +84,28 @@ public class RoomServiceImpl implements RoomService {
                 // TODO : 에러처리
                 .orElseThrow(() -> new CustomException(ExceptionCode.INTERNAL_SERVER_ERROR));
 
-        List<Long> joinedRoomsIds = roomMemberRepository.findRoomMembersJoinedRoomsByMemberId(findMember.getId())
-                .stream()
-                .map(roomMember -> roomMember.getRoom().getId())
-                .toList();
+        // 참여중인 채팅방 조회
+        List<RoomMember> findRoomMembers = roomMemberRepository.findRoomMembersJoinedRoomsByMemberId(findMember.getId());
+        Map<Long, RoomMember> roomMemberMap = findRoomMembers.stream()
+                .collect(Collectors.toMap(
+                        roomMember -> roomMember.getRoom().getId(),
+                        roomMember -> roomMember
+                ));
+        List<Long> joinedRoomIds = new ArrayList<>(roomMemberMap.keySet());
 
-        return messageRepository.findLatestMessageWithSenderByRoomId(joinedRoomsIds)
+        // 참여중인 채팅방의 마지막 메시지 조회
+        return messageRepository.findLatestMessagesByRoomIds(joinedRoomIds)
                 .stream()
-                .map(message ->  new RoomResponse(
+                .map(message -> {
+                    RoomMember roomMember = roomMemberMap.get(message.getRoom().getId());
+                    return new RoomResponse(
                             message.getRoom().getId(),
                             message.getSender().getId(),
                             message.getSender().getName(),
-                            message.getContent()
-                    ))
+                            message.getContent(),
+                            message.isUnreadByMember(roomMember)
+                    );
+                })
                 .toList();
     }
 

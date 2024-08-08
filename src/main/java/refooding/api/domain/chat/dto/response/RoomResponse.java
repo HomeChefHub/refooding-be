@@ -1,6 +1,5 @@
 package refooding.api.domain.chat.dto.response;
 
-import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record RoomResponse(
@@ -14,10 +13,11 @@ public record RoomResponse(
         String senderName,
 
         @Schema(description = "마지막 메시지 내용")
-        String lastMessage
+        String lastMessage,
+
+        @Schema(description = "읽지 않은 메시지 여부")
+        boolean isUnread
+
         // TODO : 프로필 이미지
 ) {
-    @QueryProjection
-    public RoomResponse {
-    }
 }
