@@ -37,10 +37,12 @@ public class RoomMember extends BaseTimeEntity {
         this.member = member;
         this.room = room;
         this.status = RoomMemberStatus.JOIN;
+        this.joinedTime = LocalDateTime.now();
     }
 
     public void join() {
         this.status = RoomMemberStatus.JOIN;
+        this.joinedTime = LocalDateTime.now();
     }
 
     public boolean isJoin() {

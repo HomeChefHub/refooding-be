@@ -20,10 +20,6 @@ public class Message extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MessageStatus status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member sender;
@@ -34,7 +30,6 @@ public class Message extends BaseTimeEntity {
 
     public Message(String content, Member sender, Room room) {
         this.content = content;
-        this.status = MessageStatus.UNREAD;
         this.sender = sender;
         this.room = room;
     }

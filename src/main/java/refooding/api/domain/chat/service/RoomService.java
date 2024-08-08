@@ -8,7 +8,7 @@ import java.util.List;
 public interface RoomService {
     Long getOrCreate(RoomCreateRequest request);
 
-    List<RoomResponse> getRoomListByMemberId();
+    List<RoomResponse> getJoinRoomsByMemberId();
 
     void exitRoom(Long roomId);
 }

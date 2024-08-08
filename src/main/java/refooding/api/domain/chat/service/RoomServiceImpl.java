@@ -8,7 +8,6 @@ import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
 import refooding.api.domain.chat.dto.request.RoomCreateRequest;
 import refooding.api.domain.chat.dto.response.RoomResponse;
-import refooding.api.domain.chat.entity.Message;
 import refooding.api.domain.chat.entity.Room;
 import refooding.api.domain.chat.entity.RoomMember;
 import refooding.api.domain.chat.entity.RoomMemberStatus;
@@ -23,9 +22,7 @@ import refooding.api.domain.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -65,18 +62,19 @@ public class RoomServiceImpl implements RoomService {
         ids.add(inviter.getId());
         ids.add(receiver.getId());
 
-        Optional<RoomMember> findRoomMember = getExistingRoomIdByMemberIdsAndExchangeId(ids, inviter.getId(), exchangeId);
-        if (findRoomMember.isPresent()) {
-            RoomMember roomMember = findRoomMember.get();
-            roomMember.join();
-            return roomMember.getId();
+        // 채팅참여 상태 Join으로 변경
+        List<RoomMember> roomMembers = findExistingRoomMembers(ids, exchangeId);
+        if (roomMembers.isEmpty()) {
+            return createRoom(inviter, receiver, exchangeId);
         }
 
-        return createRoom(inviter, receiver, exchangeId);
+        roomMembers.forEach(RoomMember::join);
+        return roomMembers.get(0).getId();
+
     }
 
     @Override
-    public List<RoomResponse> getRoomListByMemberId() {
+    public List<RoomResponse> getJoinRoomsByMemberId() {
         // TODO : 회원 도메인 구현시 적용
         // 임시 회원 아이디
         Long memberId = 1L;
@@ -85,7 +83,7 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.INTERNAL_SERVER_ERROR));
 
         // 참여중인 채팅방 조회
-        List<RoomMember> findRoomMembers = roomMemberRepository.findRoomMembersJoinedRoomsByMemberId(findMember.getId());
+        List<RoomMember> findRoomMembers = roomMemberRepository.findJoinedRoomsByMemberId(findMember.getId());
         Map<Long, RoomMember> roomMemberMap = findRoomMembers.stream()
                 .collect(Collectors.toMap(
                         roomMember -> roomMember.getRoom().getId(),
@@ -128,9 +126,9 @@ public class RoomServiceImpl implements RoomService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CHAT_ROOM));
         exitingMember.exit();
 
-        // 해당 채팅방을 모든 회원이 나갔다면 채팅방 삭제
+        // 해당 채팅방을 모든 회원이 나갔다면 채팅방, 채팅참여 삭제
         if (isRoomEmpty(findRoomMembers)) {
-            deleteRoom(exitingMember);
+            deleteRoom(exitingMember.getRoom(), findRoomMembers);
         }
 
     }
@@ -143,10 +141,12 @@ public class RoomServiceImpl implements RoomService {
         return joinedRoomMembers.isEmpty();
     }
 
-    private void deleteRoom(RoomMember exitingMember) {
-        Room room = exitingMember.getRoom();
+    /**
+     * 채팅방, 채탕참여 삭제
+     */
+    private void deleteRoom(Room room, List<RoomMember> findRoomMembers) {
         room.delete();
-        List<Long> roomMembers = roomMemberRepository.findRoomMembersByRoomId(room.getId())
+        List<Long> roomMembers = findRoomMembers
                 .stream()
                 .map(RoomMember::getId)
                 .toList();
@@ -156,12 +156,8 @@ public class RoomServiceImpl implements RoomService {
     /**
      * 채팅을 요청하는 회원과 채팅을 초대받는 회원의 기존 채팅방이 있는지 확인
      */
-    private Optional<RoomMember> getExistingRoomIdByMemberIdsAndExchangeId(List<Long> ids, Long inviterId, Long exchangeId){
-        List<RoomMember> roomMembers = roomMemberRepository.findRoomMembersByMemberIdsInAndExchangeId(ids, exchangeId);
-        return roomMembers.stream()
-                .filter(roomMember -> inviterId.equals(roomMember.getMember().getId()))
-                .findAny();
-
+    private List<RoomMember> findExistingRoomMembers(List<Long> ids, Long exchangeId){
+        return roomMemberRepository.findRoomMembersByMemberIdsAndExchangeId(ids, exchangeId);
     }
 
     /**
