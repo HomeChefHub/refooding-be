@@ -25,7 +25,7 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<ExchangeResponse> findExchangeByCondition(ExchangeSearchCondition condition, Pageable pageable) {
+    public Slice<ExchangeResponse> findExchangesByCondition(ExchangeSearchCondition condition, Pageable pageable) {
 
         QRegion parentRegion = new QRegion("parent");
 

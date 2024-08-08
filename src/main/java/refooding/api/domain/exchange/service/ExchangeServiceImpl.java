@@ -31,7 +31,7 @@ public class ExchangeServiceImpl implements ExchangeService{
 
     @Override
     public Slice<ExchangeResponse> getExchanges(String keyword, ExchangeStatus status, Long regionId, Long lastExchangeId, Pageable pageable) {
-        return exchangeRepository.findExchangeByCondition(
+        return exchangeRepository.findExchangesByCondition(
                 new ExchangeSearchCondition(keyword, status, regionId, lastExchangeId),
                 pageable
         );
@@ -104,7 +104,7 @@ public class ExchangeServiceImpl implements ExchangeService{
     }
 
     private Member getMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
+        return memberRepository.findByIdAndDeletedDateIsNull(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
     }
 

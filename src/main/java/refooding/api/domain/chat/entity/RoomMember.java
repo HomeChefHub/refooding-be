@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 import refooding.api.domain.member.entity.Member;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,14 +29,20 @@ public class RoomMember extends BaseTimeEntity {
     @Column(nullable = false)
     private RoomMemberStatus status;
 
+    private LocalDateTime joinedTime;
+
+    private LocalDateTime lastReadTime;
+
     public RoomMember(Member member, Room room) {
         this.member = member;
         this.room = room;
         this.status = RoomMemberStatus.JOIN;
+        this.joinedTime = LocalDateTime.now();
     }
 
     public void join() {
         this.status = RoomMemberStatus.JOIN;
+        this.joinedTime = LocalDateTime.now();
     }
 
     public boolean isJoin() {
@@ -43,6 +51,14 @@ public class RoomMember extends BaseTimeEntity {
 
     public void exit() {
         this.status = RoomMemberStatus.EXIT;
+    }
+
+    public void delete() {
+        this.deletedDate = LocalDateTime.now();
+    }
+
+    public void updateLastReadTime() {
+        this.lastReadTime = LocalDateTime.now();
     }
 
 }

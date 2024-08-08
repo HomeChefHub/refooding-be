@@ -36,4 +36,17 @@ public interface RoomControllerOpenApi {
     )
     ResponseEntity<List<RoomResponse>> getJoinRooms();
 
+    @Operation(
+            summary = "채팅방 나가기",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "채팅방 나가기 성공"
+                    )
+            }
+    )
+    ResponseEntity<Void> exitRoom(Long roomId);
+
+
+
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 import refooding.api.domain.exchange.entity.Exchange;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,10 @@ public class Room extends BaseTimeEntity {
 
     public void updateMessage(Message message) {
         messages.add(message);
+    }
+
+    public void delete(){
+        this.deletedDate = LocalDateTime.now();
     }
 
 }
