@@ -69,7 +69,7 @@ public class ExchangeServiceImpl implements ExchangeService{
         Member findMember = getMemberById(memberId);
 
         Exchange exchange = getById(exchangeId);
-        if (exchange.validateMember(findMember.getId())) {
+        if (!exchange.validateMember(findMember.getId())) {
             throw new CustomException(ExceptionCode.UNAUTHORIZED);
         }
         Region region = getRegionById(request.regionId());
