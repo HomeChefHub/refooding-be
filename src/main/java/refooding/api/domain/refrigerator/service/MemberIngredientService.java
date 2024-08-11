@@ -111,6 +111,7 @@ public class MemberIngredientService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
         return memberIngredientRepository.findByMemberIdWithIngredients(memberId).stream()
                 .map(mi -> MemberIngredientResponse.builder()
+                        .id(mi.getId())
                         .name(mi.getIngredient().getName())
                         .startDate(mi.getStartDate())
                         .endDate(mi.getEndDate())

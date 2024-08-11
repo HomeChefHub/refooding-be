@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class MemberIngredientResponse {
+    private Long id;
     private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
