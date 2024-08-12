@@ -66,7 +66,7 @@ public class MemberIngredientService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER_INGREDIENT));
 
         // 업데이트 요청 memberId와 MemberIngredient의 memberId가 일치하는지 검증
-        if (!memberIngredient.getMember().getId().equals(request.getRequestMemberId())) {
+        if (!memberIngredient.getMember().getId().equals(request.getMemberId())) {
             throw new CustomException(ExceptionCode.UNAUTHORIZED);
         }
 
@@ -87,7 +87,7 @@ public class MemberIngredientService {
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER_INGREDIENT));
 
         // 업데이트 요청 memberId와 MemberIngredient의 memberId가 일치하는지 검증
-        if (!memberIngredient.getMember().getId().equals(request.getRequestMemberId())) {
+        if (!memberIngredient.getMember().getId().equals(request.getMemberId())) {
             throw new CustomException(ExceptionCode.UNAUTHORIZED);
         }
         // 논리 삭제 실행

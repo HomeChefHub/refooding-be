@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class MemberIngredientUpdateRequest {
-    private Long requestMemberId; // 업데이트 요청하는 member의 id -> Oauth 구현시 수정 필요
+    private Long memberId; // 업데이트 요청하는 member의 id -> Oauth 구현시 수정 필요
     private String name;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
