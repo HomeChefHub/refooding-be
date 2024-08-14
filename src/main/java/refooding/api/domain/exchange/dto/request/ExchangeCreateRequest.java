@@ -4,9 +4,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 import refooding.api.domain.exchange.entity.Exchange;
+import refooding.api.domain.exchange.entity.ExchangeImage;
 import refooding.api.domain.exchange.entity.Region;
 import refooding.api.domain.member.entity.Member;
+
+import java.util.List;
 
 public record ExchangeCreateRequest(
         @NotBlank(message = "제목은 빈 문자열 또는 null일 수 없습니다")
@@ -22,8 +26,9 @@ public record ExchangeCreateRequest(
         @NotNull(message = "지역을 입력해주세요")
         @Schema(description = "하위 지역 아이디")
         Long regionId
+
 ) {
-    public Exchange toExchange(Region region, Member member) {
-        return new Exchange(title, content, region, member);
+    public Exchange toExchange(Region region, Member member, List<ExchangeImage> images) {
+        return new Exchange(title, content, region, member, images);
     }
 }
