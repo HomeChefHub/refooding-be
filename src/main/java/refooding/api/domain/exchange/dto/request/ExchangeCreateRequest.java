@@ -25,7 +25,11 @@ public record ExchangeCreateRequest(
 
         @NotNull(message = "지역을 입력해주세요")
         @Schema(description = "하위 지역 아이디")
-        Long regionId
+        Long regionId,
+
+        @Size(max = 5, message = "이미지는 최대 5개까지 첨부할 수 있습니다")
+        @Schema(description = "식재료 이미지 파일")
+        List<MultipartFile> exchangeImageFiles
 
 ) {
     public Exchange toExchange(Region region, Member member, List<ExchangeImage> images) {

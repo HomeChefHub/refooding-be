@@ -39,7 +39,8 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
                                 parentRegion.name,
                                 region.name,
                                 exchange.status,
-                                exchange.createdDate
+                                exchange.createdDate,
+                                exchange.thumbnailUrl
                         )
                 )
                 .from(exchange)

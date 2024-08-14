@@ -51,7 +51,7 @@ public class Exchange extends BaseTimeEntity {
         this.region = region;
         this.member = member;
         this.images.addAll(images);
-        this.thumbnailUrl = images.get(0).getUrl();
+        this.thumbnailUrl = !images.isEmpty() ? images.get(0).getUrl() : null;
     }
 
     public void updateExchange(String title, String content, ExchangeStatus status, Region region) {

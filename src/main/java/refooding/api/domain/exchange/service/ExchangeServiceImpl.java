@@ -5,6 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import refooding.api.common.aws.S3Uploader;
 import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
@@ -12,13 +14,18 @@ import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
 import refooding.api.domain.exchange.dto.response.ExchangeDetailResponse;
 import refooding.api.domain.exchange.dto.response.ExchangeResponse;
 import refooding.api.domain.exchange.entity.Exchange;
+import refooding.api.domain.exchange.entity.ExchangeImage;
 import refooding.api.domain.exchange.entity.ExchangeStatus;
 import refooding.api.domain.exchange.entity.Region;
+import refooding.api.domain.exchange.repository.ExchangeImageRepository;
 import refooding.api.domain.exchange.repository.ExchangeRepository;
 import refooding.api.domain.exchange.repository.ExchangeSearchCondition;
 import refooding.api.domain.exchange.repository.RegionRepository;
 import refooding.api.domain.member.entity.Member;
 import refooding.api.domain.member.repository.MemberRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,8 +33,10 @@ import refooding.api.domain.member.repository.MemberRepository;
 public class ExchangeServiceImpl implements ExchangeService{
 
     private final ExchangeRepository exchangeRepository;
+    private final ExchangeImageRepository exchangeImageRepository;
     private final RegionRepository regionRepository;
     private final MemberRepository memberRepository;
+    private final S3Uploader s3Uploader;
 
     @Override
     public Slice<ExchangeResponse> getExchanges(String keyword, ExchangeStatus status, Long regionId, Long lastExchangeId, Pageable pageable) {
@@ -52,12 +61,38 @@ public class ExchangeServiceImpl implements ExchangeService{
         Member findMember = getMemberById(memberId);
         Region region = getRegionById(request.regionId());
 
-        Exchange exchange = request.toExchange(region, findMember);
-        exchangeRepository.save(exchange);
+        List<MultipartFile> imageFiles = request.exchangeImageFiles();
+        List<ExchangeImage> images = new ArrayList<>();
 
-        return exchange.getId();
+        boolean isFileEmpty = isFileListNonEmpty(imageFiles);
+
+        if (!isFileEmpty) {
+            List<String> exchangeImageUrls = s3Uploader.uploadExchangeImg(imageFiles);
+            images = exchangeImageUrls.stream()
+                    .map(ExchangeImage::new)
+                    .toList();
+        }
+
+        Exchange exchange = request.toExchange(region, findMember, images);
+        Exchange savedExchange = exchangeRepository.save(exchange);
+
+        if (!isFileEmpty) {
+            images.forEach(image -> image.setExchange(savedExchange));
+            exchangeImageRepository.saveAll(images);
+        }
+
+        return savedExchange.getId();
     }
 
+    private static boolean isFileListNonEmpty(List<MultipartFile> imageFiles) {
+        return imageFiles == null || imageFiles.isEmpty();
+    }
+
+    private List<ExchangeImage> createExchangeImage(List<String> exchangeImageUrls) {
+        return exchangeImageUrls.stream()
+                .map(ExchangeImage::new)
+                .toList();
+    }
 
 
     @Override
