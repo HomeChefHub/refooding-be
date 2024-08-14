@@ -1,3 +1,34 @@
+server:
+  servlet:
+    contextPath: /api/v1
+
 spring:
+  config:
+    import: application-secret.yml
   profiles:
     active: local # application-dev.yml 사용
+
+# AWS S3
+cloud:
+  aws:
+    s3:
+      bucket: ${s3.config.bucket-name}
+    credentials:
+      access-key: ${s3.config.access-key}
+      secret-key: ${s3.config.secret-key}
+    region:
+      static: ${s3.config.region}
+      auto: false
+    stack:
+      auto: false
+
+# swagger
+springdoc:
+  swagger-ui:
+    path: /index.html # Swagger-ui 경로
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
