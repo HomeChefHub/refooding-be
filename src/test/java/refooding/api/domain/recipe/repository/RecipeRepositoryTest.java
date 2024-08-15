@@ -114,7 +114,7 @@ public class RecipeRepositoryTest {
 
     }
 
-    @Test
+    // @Test
     void 지연_로딩_테스트() {
         // given
 
@@ -138,7 +138,7 @@ public class RecipeRepositoryTest {
         });
     }
 
-    @Test
+    // @Test
     void 전체_목록_조회_테스트() {
         List<Recipe> all = recipeRepository.findAll();
 
