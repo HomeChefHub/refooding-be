@@ -3,24 +3,8 @@ server:
     contextPath: /api/v1
 
 spring:
-  config:
-    import: application-secret.yml
   profiles:
     active: local # application-dev.yml 사용
-
-# AWS S3
-cloud:
-  aws:
-    s3:
-      bucket: ${S3_BUCKET_NAME}
-    credentials:
-      access-key: ${S3_ACCESS_KEY}
-      secret-key: ${S3_SECRET_KEY}
-    region:
-      static: ${S3_REGION}
-      auto: false
-    stack:
-      auto: false
 
 # swagger
 springdoc:
