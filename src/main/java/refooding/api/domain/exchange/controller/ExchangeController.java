@@ -48,8 +48,9 @@ public class ExchangeController implements ExchangeControllerOpenApi{
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody ExchangeCreateRequest request) {
+    public ResponseEntity<Void> create(@Valid @ModelAttribute ExchangeCreateRequest request) {
         // TODO : 인증 추가
+
         Long exchangeId = exchangeService.create(request);
         return ResponseEntity.created(URI.create("/api/v1/exchanges/" + exchangeId)).build();
     }

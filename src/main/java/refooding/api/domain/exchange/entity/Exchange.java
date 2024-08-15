@@ -8,6 +8,8 @@ import refooding.api.common.domain.BaseTimeEntity;
 import refooding.api.domain.member.entity.Member;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,12 +39,19 @@ public class Exchange extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    public Exchange(String title, String content, Region region, Member member) {
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "exchange")
+    private List<ExchangeImage> images = new ArrayList<>();
+
+    private String thumbnailUrl;
+
+    public Exchange(String title, String content, Region region, Member member, List<ExchangeImage> images) {
         this.title = title;
         this.content = content;
         this.status = ExchangeStatus.ACTIVE;
         this.region = region;
         this.member = member;
+        this.images.addAll(images);
+        this.thumbnailUrl = !images.isEmpty() ? images.get(0).getUrl() : null;
     }
 
     public void updateExchange(String title, String content, ExchangeStatus status, Region region) {

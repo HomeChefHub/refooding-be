@@ -29,8 +29,10 @@ public record ExchangeResponse(
         ExchangeStatus status,
 
         @Schema(description = "생성 시간")
-        LocalDateTime createDate
-        // TODO : 이미지
+        LocalDateTime createDate,
+
+        @Schema(description = "대표 미지")
+        String thumbnailUrl
         // TODO : 회원
 ) {
     @QueryProjection

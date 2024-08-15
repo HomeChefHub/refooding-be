@@ -2,9 +2,11 @@ package refooding.api.domain.exchange.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import refooding.api.domain.exchange.entity.Exchange;
+import refooding.api.domain.exchange.entity.ExchangeImage;
 import refooding.api.domain.exchange.entity.ExchangeStatus;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ExchangeDetailResponse(
         @Schema(description = "식재료 교환 아이디")
@@ -32,10 +34,16 @@ public record ExchangeDetailResponse(
         ExchangeStatus status,
 
         @Schema(description = "생성 시간")
-        LocalDateTime createDate
-        // 이미지 추가
+        LocalDateTime createDate,
+
+        @Schema(description = "이미지 목록")
+        List<String> imageUrls
+
 ) {
     public static ExchangeDetailResponse from(Exchange exchange) {
+        List<String> imageUrls = exchange.getImages().stream()
+                .map(ExchangeImage::getUrl)
+                .toList();
         return new ExchangeDetailResponse(
                 exchange.getId(),
                 exchange.getTitle(),
@@ -45,6 +53,8 @@ public record ExchangeDetailResponse(
                 exchange.getRegion().getParent().getName(),
                 exchange.getRegion().getName(),
                 exchange.getStatus(),
-                exchange.getCreatedDate());
+                exchange.getCreatedDate(),
+                imageUrls
+                );
     }
 }
