@@ -1,7 +1,4 @@
 spring:
-  config:
-    import: application-secret.yml
-
   h2:
     console:
       enabled: true
@@ -20,8 +17,8 @@ spring:
         highlight_sql: true
       default_batch_fetch_size: 100
     show-sql: true
-    database-platform: org.hibernate.dialect.H2Dialect # Hibernate가 스키마를 생성한 후에 데이터를 삽입
-    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true # Hibernate가 스키마를 생성한 후에 데이터를 삽입
 
   sql:
     init:
@@ -29,21 +26,6 @@ spring:
       data-locations:
         - classpath:member-data.sql
         - classpath:exchange-data.sql
-
-
-# AWS S3
-cloud:
-  aws:
-    s3:
-      bucket: ${S3_BUCKET_NAME}
-    credentials:
-      access-key: ${S3_ACCESS_KEY}
-      secret-key: ${S3_SECRET_KEY}
-    region:
-      static: ${S3_REGION}
-      auto: false
-    stack:
-      auto: false
 
 logging:
   level:
