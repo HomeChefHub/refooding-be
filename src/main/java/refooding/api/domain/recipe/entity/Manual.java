@@ -20,21 +20,23 @@ public class Manual extends BaseTimeEntity {
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
+    @Column(nullable = false)
     private int seq;
 
+    @Column(nullable = false)
     private String content;
 
-    private String imageSrc;
+    @Column(nullable = false)
+    private String imageUrl;
 
     @Builder
-    public Manual(int seq, String content, String imageSrc) {
+    public Manual(int seq, String content, String imageUrl) {
         this.seq = seq;
         this.content = content;
-        this.imageSrc = imageSrc;
+        this.imageUrl = imageUrl;
     }
 
     // == 연관관계 편의 메소드 설정 == //
-
     public void changeRecipe(Recipe recipe) {
         this.recipe = recipe;
     }

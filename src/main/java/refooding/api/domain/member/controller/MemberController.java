@@ -10,12 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import refooding.api.domain.member.dto.MemberRequest;
 import refooding.api.domain.member.dto.MemberResponse;
-import refooding.api.domain.member.entity.Member;
 import refooding.api.domain.member.service.MemberService;
-import refooding.api.domain.recipe.dto.RecipeResponse;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "테스트용 멤버 CRUD API")
 @RestController

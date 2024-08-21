@@ -12,33 +12,30 @@ public class RecipeData {
 
     @Getter
     public static class Recipe {
-        @JsonProperty("RCP_NM")
+        @JsonProperty("RECIPE_NAME")
         private String name;
-        @JsonProperty("RCP_PARTS_DTLS")
+        @JsonProperty("INGREDIENTS")
         private String ingredientsDetails;
         @JsonProperty("HASH_TAG")
-        private String hashTag;
-        @JsonProperty("RCP_NA_TIP")
+        private String mainIngredientName;
+        @JsonProperty("TIP")
         private String tip;
-        @JsonProperty("ATT_FILE_NO_MAIN")
+        @JsonProperty("THUMBNAIL")
         private String mainImage;
-        @JsonProperty("manuals")
+        @JsonProperty("MANUALS")
         private List<Manual> manuals; // 메뉴얼 개수는 레시피마다 달라질 수 있으므로 리스트로 저장
 
     }
 
     @Getter
     public static class Manual {
-        @JsonProperty("seq")
+        @JsonProperty("SEQ")
         private int seq;
-        @JsonProperty("content")
+        @JsonProperty("CONTENT")
         private String content;
-        @JsonProperty("imageSrc")
-        private String imageSrc;
+        @JsonProperty("IMAGE_URL")
+        private String imageUrl;
 
     }
 
 }
-
-
-
