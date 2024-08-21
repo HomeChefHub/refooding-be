@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 import refooding.api.domain.member.entity.Member;
-import refooding.api.domain.recipe.entity.Ingredient;
 
 import java.time.LocalDateTime;
 
@@ -24,10 +23,6 @@ public class MemberIngredient extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ingredient_id")
-    private Ingredient ingredient;
-
     @Column(nullable = false)
     private LocalDateTime startDate;
 
@@ -35,9 +30,8 @@ public class MemberIngredient extends BaseTimeEntity {
     private LocalDateTime endDate;
 
     @Builder
-    public MemberIngredient(Member member, Ingredient ingredient, LocalDateTime startDate, LocalDateTime endDate) {
+    public MemberIngredient(Member member, LocalDateTime startDate, LocalDateTime endDate) {
         this.member = member;
-        this.ingredient = ingredient;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -49,10 +43,6 @@ public class MemberIngredient extends BaseTimeEntity {
     // == 연관관계 편의 메소드 == //
     public void changeMember(Member member) {
         this.member = member;
-    }
-
-    public void changeIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
     }
 
     // 유통기한 변경 메소드
