@@ -6,40 +6,42 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
+import refooding.api.domain.member.entity.Member;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class RecipeIngredient extends BaseTimeEntity {
+public class RecipeLike extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ingredient_id")
-    private Ingredient ingredient;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
-    private String quantity;
-
-
     @Builder
-    public RecipeIngredient(Ingredient ingredient, String quantity) {
-        this.ingredient = ingredient;
-        this.quantity = quantity;
-    }
-
-
-    // == 연관관계 편의 메소드 == //
-    public void changeRecipe(Recipe recipe) {
+    public RecipeLike(Member member, Recipe recipe) {
+        this.member = member;
         this.recipe = recipe;
     }
 
-    public void changeIngredient(Ingredient ingredient) {
-        this.ingredient = ingredient;
+    public void like() {
+        this.deletedDate = null;
+    }
+
+    public void unlike(){
+        this.deletedDate = LocalDateTime.now();
+    }
+
+    public boolean isLiked() {
+        return deletedDate == null;
     }
 }

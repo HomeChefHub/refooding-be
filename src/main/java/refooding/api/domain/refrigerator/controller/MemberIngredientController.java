@@ -30,9 +30,10 @@ public class MemberIngredientController {
             }
     )
     public ResponseEntity<String> addMemberIngredient(@RequestBody MemberIngredientCreateRequest request) {
-        Long savedId = memberIngredientService.saveMemberIngredient(request);
+        // Long savedId = memberIngredientService.saveMemberIngredient(request);
 
-        return ResponseEntity.ok("MemberIngredient added with ID: " + savedId);
+        // return ResponseEntity.ok("MemberIngredient added with ID: " + savedId);
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/{memberIngredientId}")
@@ -45,7 +46,7 @@ public class MemberIngredientController {
     )
     public ResponseEntity<String> updateMemberIngredient(@PathVariable Long memberIngredientId,
                                                          @RequestBody MemberIngredientUpdateRequest request) {
-        memberIngredientService.updateMemberIngredient(memberIngredientId, request);
+        // memberIngredientService.updateMemberIngredient(memberIngredientId, request);
 
         return ResponseEntity.ok("MemberIngredient updated with ID: " + memberIngredientId);
     }
@@ -74,8 +75,9 @@ public class MemberIngredientController {
             }
     )
     public ResponseEntity<MemberIngredientResponse> getMemberIngredient(@PathVariable Long memberIngredientId) {
-        MemberIngredientResponse response = memberIngredientService.getMemberIngredient(memberIngredientId);
-        return ResponseEntity.ok(response);
+        // MemberIngredientResponse response = memberIngredientService.getMemberIngredient(memberIngredientId);
+        // return ResponseEntity.ok(response);
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/members/{memberId}")
@@ -87,8 +89,9 @@ public class MemberIngredientController {
             }
     )
     public ResponseEntity<List<MemberIngredientResponse>> getMemberIngredients(@PathVariable Long memberId) {
-        List<MemberIngredientResponse> responses = memberIngredientService.getMemberIngredients(memberId);
-        return ResponseEntity.ok(responses);
+        // List<MemberIngredientResponse> responses = memberIngredientService.getMemberIngredients(memberId);
+        // return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(null);
     }
 
 

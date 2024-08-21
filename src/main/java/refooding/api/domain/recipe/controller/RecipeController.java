@@ -1,137 +1,78 @@
 package refooding.api.domain.recipe.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import refooding.api.common.exception.CustomException;
-import refooding.api.common.exception.ExceptionCode;
-import refooding.api.domain.recipe.dto.FavoriteRecipeToggleResponse;
-import refooding.api.domain.recipe.dto.RecipeDetailResponse;
-import refooding.api.domain.recipe.dto.RecipeResponse;
+import refooding.api.domain.recipe.dto.request.RecipeLikeRequest;
+import refooding.api.domain.recipe.dto.response.RecipeDetailResponse;
+import refooding.api.domain.recipe.dto.response.RecipeLikeResponse;
+import refooding.api.domain.recipe.dto.response.RecipeResponse;
 import refooding.api.domain.recipe.service.RecipeService;
 
-import java.util.Arrays;
-import java.util.List;
-
-@Tag(name = "레시피 조회 API")
 @RestController
 @RequestMapping("/recipes")
 @RequiredArgsConstructor
-public class RecipeController {
+public class RecipeController implements RecipeControllerOpenApi{
 
     private final RecipeService recipeService;
 
     @GetMapping
-    @Operation(
-            summary = "전체 레시피 목록 조회",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "레시피 목록 조회 성공",
-                            content = @Content(schema = @Schema(implementation = RecipeResponse.class))
-                    )
-            }
-    )
-    public ResponseEntity<Slice<RecipeResponse>> getRecipes(@RequestParam(required = false)
-                                                                @Parameter(example = "감자,당근") String ingredientNames,
-                                                           @RequestParam(required = false) String recipeName,
-                                                           @RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "5") int size) {
+    public ResponseEntity<Slice<RecipeResponse>> getRecipes(
+            @RequestParam(required = false) String searchKeyword,
+            @RequestParam(required = false, defaultValue = "5") int size,
+            @RequestParam(required = false) Long lastRecipeId) {
 
-        if (ingredientNames != null && !ingredientNames.isEmpty()) { // 주 재료명으로 조회하는 경우
-            List<String> ingredientNameList = Arrays.asList(ingredientNames.split(",")); // ,을 기준으로 슬라이싱
-            Slice<RecipeResponse> response = recipeService.getRecipesByIngredientNames(ingredientNameList, PageRequest.of(page, size));
-            return ResponseEntity.ok(response);
-        }
-        if (recipeName != null) { // 레시피명으로 조회하는 경우
-            Slice<RecipeResponse> response = recipeService.getRecipesByRecipeName(recipeName, PageRequest.of(page, size));
-            return ResponseEntity.ok(response);
-        }
-        else { // 전체 조회
-            Slice<RecipeResponse> response = recipeService.getRecipes(PageRequest.of(page, size));
-            return ResponseEntity.ok(response);
-        }
-    }
-
-    @GetMapping("/random")
-    @Operation(
-            summary = "랜덤 레시피 목록 조회",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "추천 목록 조회 성공")
-            })
-    public ResponseEntity<Slice<RecipeResponse>> getRandomRecipes(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
-
-        PageRequest pageable = PageRequest.of(page, size);
-        Slice<RecipeResponse> randomRecipes = recipeService.getRandomRecipes(pageable);
-
-        return ResponseEntity.ok(randomRecipes);
-    }
-
-    @GetMapping("/{recipeId}")
-    @Operation(
-            summary = "레시피 상세 조회",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "레시피 상세 조회 성공",
-                            content = @Content(schema = @Schema(implementation = RecipeDetailResponse.class))
-                    )
-            }
-    )
-    public ResponseEntity<RecipeDetailResponse> getRecipeDetailById(@PathVariable Long recipeId) {
-        RecipeDetailResponse response = recipeService.getRecipeDetailById(recipeId);
+        Slice<RecipeResponse> response = recipeService.getRecipes(searchKeyword, lastRecipeId, PageRequest.ofSize(size));
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/toggle-favorite/{memberId}/{recipeId}")
-    @Operation(
-            summary = "레시피 찜/찜 해제 토글",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "레시피 찜 상태 토글 성공"),
-                    @ApiResponse(responseCode = "404", description = "레시피 또는 멤버를 찾을 수 없음")
-            }
-    )
-    public ResponseEntity<FavoriteRecipeToggleResponse> toggleFavoriteRecipe(@PathVariable Long memberId, @PathVariable Long recipeId) {
-            boolean isFavorited = recipeService.toggleFavoriteRecipe(memberId, recipeId);
-            String message = isFavorited ? "찜 상태로 바뀌었습니다." : "찜 상태가 해제되었습니다.";
-            return ResponseEntity.ok().body(FavoriteRecipeToggleResponse.builder().success(true).message(message).build());
+    @GetMapping("/{recipeId}")
+    public ResponseEntity<RecipeDetailResponse> getRecipeById(@PathVariable Long recipeId) {
+        RecipeDetailResponse response = recipeService.getRecipeById(recipeId);
+        return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/members/{memberId}/favorites")
-    @Operation(
-            summary = "멤버별 찜한 레시피 목록 조회",
-            responses = {
-            @ApiResponse(responseCode = "200", description = "찜 목록 조회 성공")
-    })
-    public ResponseEntity<Slice<RecipeResponse>> getFavoriteRecipesByMemberId(@PathVariable Long memberId,
-                                                                              @RequestParam(defaultValue = "0") int page,
-                                                                              @RequestParam(defaultValue = "5") int size) {
-        Slice<RecipeResponse> favoriteRecipes = recipeService.getFavoriteRecipesByMemberId(memberId, PageRequest.of(page, size));
+    @GetMapping("/likes")
+    public ResponseEntity<Slice<RecipeResponse>> getLikeRecipes(
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) Long lastLikeRecipeId) {
+
+        // TODO : 인증 추가
+        // 임시 회원 아이디
+        Long memberId = 1L;
+
+        Slice<RecipeResponse> favoriteRecipes = recipeService.getLikeRecipes(memberId, lastLikeRecipeId, PageRequest.ofSize(size));
         return ResponseEntity.ok(favoriteRecipes);
     }
 
+    @PostMapping("/likes")
+    public ResponseEntity<RecipeLikeResponse> toggleRecipeLike(@Valid @RequestBody RecipeLikeRequest request) {
+        //TODO : 인증 추가
+        // 임시 회원 아이디
+        Long memberId = 1L;
 
-    @GetMapping("/members/{memberId}/recommends")
-    @Operation(
-            summary = "멤버별 추천 레시피 목록 조회",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "추천 목록 조회 성공")
-            })
-    public ResponseEntity<Slice<RecipeResponse>> getRecommendRecipesByMemberId(@PathVariable Long memberId,
-                                                                              @RequestParam(defaultValue = "0") int page,
-                                                                              @RequestParam(defaultValue = "5") int size) {
-        Slice<RecipeResponse> recommendRecipes = recipeService.getRecommendedRecipesByMemberId(memberId, PageRequest.of(page, size));
-        return ResponseEntity.ok(recommendRecipes);
+        RecipeLikeResponse response = recipeService.toggleRecipeLike(memberId, request.recipeId());
+        return ResponseEntity.ok(response);
     }
+
+    // @GetMapping("/random")
+    // @Operation(
+    //         summary = "랜덤 레시피 목록 조회",
+    //         responses = {
+    //                 @ApiResponse(responseCode = "200", description = "추천 목록 조회 성공")
+    //         })
+    // public ResponseEntity<Slice<RecipeResponse>> getRandomRecipes(
+    //         @RequestParam(defaultValue = "0") int page,
+    //         @RequestParam(defaultValue = "5") int size) {
+    //
+    //     PageRequest pageable = PageRequest.of(page, size);
+    //     Slice<RecipeResponse> randomRecipes = recipeService.getRandomRecipes(pageable);
+    //
+    //     return ResponseEntity.ok(randomRecipes);
+    // }
+
 
 }
