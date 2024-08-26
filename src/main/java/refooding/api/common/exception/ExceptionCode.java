@@ -21,7 +21,7 @@ public enum ExceptionCode {
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다"),
     NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다"),
     NOT_FOUND_RECIPE(HttpStatus.NOT_FOUND, "존재하지 않는 레시피입니다."),
-    NOT_FOUND_MEMBER_INGREDIENT(HttpStatus.NOT_FOUND, "해당 사용자의 냉장고에 존재하지 않는 재료입니다."),
+    NOT_FOUND_INGREDIENT(HttpStatus.NOT_FOUND, "냉장고에 존재하지 않는 재료입니다."),
 
     // 500
     FILE_CONVERSION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 변환중 오류가 발생했습니다"),
