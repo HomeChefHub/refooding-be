@@ -6,7 +6,5 @@ public record ManualResponse (
     @Schema(description = "레시피 순서")
     int seq,
     @Schema(description = "내용")
-    String content,
-    @Schema(description = "이미지")
-    String imageUrl
+    String content
 ){}

@@ -26,14 +26,10 @@ public class Manual extends BaseTimeEntity {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private String imageUrl;
-
     @Builder
     public Manual(int seq, String content, String imageUrl) {
         this.seq = seq;
         this.content = content;
-        this.imageUrl = imageUrl;
     }
 
     // == 연관관계 편의 메소드 설정 == //

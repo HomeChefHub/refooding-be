@@ -23,7 +23,7 @@ public record RecipeDetailResponse (
     public static RecipeDetailResponse from(Recipe recipe) {
         List<ManualResponse> manualResponses = recipe.getManuals()
                 .stream()
-                .map(manual -> new ManualResponse(manual.getSeq(), manual.getContent(), manual.getImageUrl()))
+                .map(manual -> new ManualResponse(manual.getSeq(), manual.getContent()))
                 .toList();
         return new RecipeDetailResponse(
                 recipe.getId(),
