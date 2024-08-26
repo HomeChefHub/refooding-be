@@ -7,6 +7,10 @@ spring:
     import: application-secret.yml
   profiles:
     active: local # application-dev.yml 사용
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE}
+      max-request-size: ${MAX_REQUEST_SIZE}
 
 # swagger
 springdoc:
