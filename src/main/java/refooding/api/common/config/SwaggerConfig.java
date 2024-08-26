@@ -15,7 +15,7 @@ public class SwaggerConfig {
 
     @Value("${SWAGGER_LOCAL_URL}")
     private String localUrl;
-    @Value("${SWAGGER:qq_URL}")
+    @Value("${SWAGGER_URL}")
     private String url;
 
 
