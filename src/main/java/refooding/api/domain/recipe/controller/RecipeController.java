@@ -19,6 +19,7 @@ public class RecipeController implements RecipeControllerOpenApi{
 
     private final RecipeService recipeService;
 
+    @Override
     @GetMapping
     public ResponseEntity<Slice<RecipeResponse>> getRecipes(
             @RequestParam(required = false) String searchKeyword,
@@ -29,12 +30,14 @@ public class RecipeController implements RecipeControllerOpenApi{
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @GetMapping("/{recipeId}")
     public ResponseEntity<RecipeDetailResponse> getRecipeById(@PathVariable Long recipeId) {
         RecipeDetailResponse response = recipeService.getRecipeById(recipeId);
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @GetMapping("/likes")
     public ResponseEntity<Slice<RecipeResponse>> getLikeRecipes(
             @RequestParam(defaultValue = "5") int size,
@@ -48,6 +51,7 @@ public class RecipeController implements RecipeControllerOpenApi{
         return ResponseEntity.ok(favoriteRecipes);
     }
 
+    @Override
     @PostMapping("/likes")
     public ResponseEntity<RecipeLikeResponse> toggleRecipeLike(@Valid @RequestBody RecipeLikeRequest request) {
         //TODO : 인증 추가

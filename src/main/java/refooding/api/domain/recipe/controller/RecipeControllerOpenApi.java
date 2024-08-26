@@ -29,7 +29,7 @@ public interface RecipeControllerOpenApi {
                             example = "김치찌개(레시피명), 감자(재료명)"
                     ),
                     @Parameter(name = "size", description = "요청 레시피 수(0개 이상~50개 이하)"),
-                    @Parameter(name = "lastExchangeId", description = "이전 요청 목록의 마지막 레시피 아이디"),
+                    @Parameter(name = "lastRecipeId", description = "이전 요청 목록의 마지막 레시피 아이디"),
             }
     )
     ResponseEntity<Slice<RecipeResponse>> getRecipes(String searchKeyword, int size, Long lastRecipeId);
@@ -57,6 +57,7 @@ public interface RecipeControllerOpenApi {
             responses = {
                     @ApiResponse(responseCode = "200", description = "레시피 좋아요 목록 조회 성공")
             })
+    @Parameter(name = "lastLikeRecipeId", description = "이전 요청 목록의 마지막 레시피 아이디")
     ResponseEntity<Slice<RecipeResponse>> getLikeRecipes(int size, Long lastLikeRecipeId);
 
 }
