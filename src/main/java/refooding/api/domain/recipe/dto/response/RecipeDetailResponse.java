@@ -1,8 +1,10 @@
 package refooding.api.domain.recipe.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import refooding.api.domain.recipe.entity.Manual;
 import refooding.api.domain.recipe.entity.Recipe;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -23,7 +25,8 @@ public record RecipeDetailResponse (
     public static RecipeDetailResponse from(Recipe recipe) {
         List<ManualResponse> manualResponses = recipe.getManuals()
                 .stream()
-                .map(manual -> new ManualResponse(manual.getSeq(), manual.getContent()))
+                .sorted(Comparator.comparing(Manual::getSeq))
+                .map(manual -> new ManualResponse(manual.getContent()))
                 .toList();
         return new RecipeDetailResponse(
                 recipe.getId(),
