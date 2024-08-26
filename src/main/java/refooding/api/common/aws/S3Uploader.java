@@ -39,7 +39,7 @@ public class S3Uploader {
                 .toList();
     }
 
-    public List<String> uploadRefrigeratorImg(List<MultipartFile> files) {
+    public List<String> uploadFridgeIngredientImg(List<MultipartFile> files) {
         files.forEach(ImageUtil::validate);
         return files.stream()
                 .map(file -> uploadImage(file, REFRIGERATOR_URI))
