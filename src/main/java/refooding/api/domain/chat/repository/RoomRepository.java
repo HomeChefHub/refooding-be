@@ -10,6 +10,6 @@ public interface RoomRepository extends JpaRepository<Room, Long>{
     @Query("select room " +
             "from Room room " +
             "where room.id = :roomId " +
-            "and room.deletedDate is null")
+            "and room.deletedAt is null")
     Optional<Room> findRoomById(Long roomId);
 }

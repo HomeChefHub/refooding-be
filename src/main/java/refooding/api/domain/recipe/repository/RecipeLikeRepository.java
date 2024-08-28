@@ -13,7 +13,7 @@ public interface RecipeLikeRepository extends JpaRepository<RecipeLike, Long> {
     Optional<RecipeLike> findByMemberIdAndRecipeId(Long memberId, Long recipeId);
 
     @Query("select rl.recipe.id from RecipeLike rl " +
-            "where rl.member.id = :memberId and rl.deletedDate is null " +
-            "order by rl.createdDate desc")
+            "where rl.member.id = :memberId and rl.deletedAt is null " +
+            "order by rl.createdAt desc")
     List<Long> findRecipeIdsByMemberId(Long memberId);
 }

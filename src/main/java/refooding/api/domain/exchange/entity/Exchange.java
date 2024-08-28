@@ -70,7 +70,7 @@ public class Exchange extends BaseTimeEntity {
     }
 
     public void delete(){
-        this.deletedDate = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 
     public boolean isAuthor(Member member) {

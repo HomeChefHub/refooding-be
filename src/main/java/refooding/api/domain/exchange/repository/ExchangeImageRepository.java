@@ -10,6 +10,6 @@ public interface ExchangeImageRepository extends JpaRepository<ExchangeImage, Lo
 
     @Query("select i from ExchangeImage i " +
             "where i.exchange.id = :exchangeId " +
-            "and i.deletedDate is null")
+            "and i.deletedAt is null")
     List<ExchangeImage> findAllByExchangeId(Long exchangeId);
 }

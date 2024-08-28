@@ -37,6 +37,6 @@ public class ExchangeImage extends BaseTimeEntity {
     }
 
     public void delete() {
-        this.deletedDate = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 }

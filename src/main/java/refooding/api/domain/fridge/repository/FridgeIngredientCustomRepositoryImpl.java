@@ -52,7 +52,7 @@ public class FridgeIngredientCustomRepositoryImpl implements FridgeIngredientCus
 
                 )
                 .orderBy(daysUntilExpiration.asc(),
-                        fridgeIngredient.createdDate.desc(),
+                        fridgeIngredient.createdAt.desc(),
                         fridgeIngredient.id.asc());
 
         return QuerydslRepositoryUtils.fetchSlice(content, pageable);
@@ -95,7 +95,7 @@ public class FridgeIngredientCustomRepositoryImpl implements FridgeIngredientCus
     }
 
     private static BooleanExpression notDeleted() {
-        return fridgeIngredient.deletedDate.isNull();
+        return fridgeIngredient.createdAt.isNull();
     }
 
     private NumberTemplate<Integer> calculateDaysUntilExpiration() {

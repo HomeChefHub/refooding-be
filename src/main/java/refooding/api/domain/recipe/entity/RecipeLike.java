@@ -34,14 +34,14 @@ public class RecipeLike extends BaseTimeEntity {
     }
 
     public void like() {
-        this.deletedDate = null;
+        this.deletedAt = null;
     }
 
     public void unlike(){
-        this.deletedDate = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 
     public boolean isLiked() {
-        return deletedDate == null;
+        return deletedAt == null;
     }
 }

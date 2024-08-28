@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface FridgeIngredientRepository extends JpaRepository<FridgeIngredient, Long>, FridgeIngredientCustomRepository {
     @Query("select fi from FridgeIngredient fi " +
             "where fi.id = :id " +
-            "and fi.deletedDate is null")
+            "and fi.deletedAt is null")
     Optional<FridgeIngredient> findFridgeIngredientById(Long id);
 }

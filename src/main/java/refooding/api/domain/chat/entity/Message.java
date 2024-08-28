@@ -53,7 +53,7 @@ public class Message extends BaseTimeEntity {
         LocalDateTime lastReadTime = roomMember.getLastReadTime();
 
         // 마지막으로 읽은 시간이 없거나, 마지막으로 읽은 시간보다 마지막 메시지의 생성 날짜가 더 클 때
-        return lastReadTime == null || this.getCreatedDate().isAfter(lastReadTime);
+        return lastReadTime == null || this.getDeletedAt().isAfter(lastReadTime);
     }
 
 }

@@ -13,6 +13,6 @@ public interface ExchangeRepository extends JpaRepository<Exchange, Long>, Excha
             "join fetch e.region r " +
             "join fetch r.parent pr " +
             "where e.id = :exchangeId " +
-            "and e.deletedDate is null")
+            "and e.deletedAt is null")
     Optional<Exchange> findExchangeById(Long exchangeId);
 }
