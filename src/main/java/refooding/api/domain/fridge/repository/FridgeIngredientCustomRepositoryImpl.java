@@ -1,6 +1,7 @@
 package refooding.api.domain.fridge.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -16,6 +17,8 @@ import refooding.api.domain.fridge.dto.response.IngredientResponse;
 import refooding.api.domain.fridge.dto.response.QIngredientResponse;
 import refooding.api.domain.fridge.entity.QFridgeIngredient;
 
+import java.util.Date;
+
 import static refooding.api.domain.fridge.entity.QFridgeIngredient.fridgeIngredient;
 import static refooding.api.domain.fridge.entity.QIngredient.ingredient;
 
@@ -30,6 +33,7 @@ public class FridgeIngredientCustomRepositoryImpl implements FridgeIngredientCus
     public Slice<IngredientResponse> findFridgeIngredientByCondition(FridgeIngredientSearchCondition condition, Pageable pageable) {
 
         NumberTemplate<Integer> daysUntilExpiration = calculateDaysUntilExpiration();
+
 
         JPAQuery<IngredientResponse> content = jpaQueryFactory
                 .select(
@@ -95,13 +99,13 @@ public class FridgeIngredientCustomRepositoryImpl implements FridgeIngredientCus
     }
 
     private static BooleanExpression notDeleted() {
-        return fridgeIngredient.createdAt.isNull();
+        return fridgeIngredient.deletedAt.isNull();
     }
 
     private NumberTemplate<Integer> calculateDaysUntilExpiration() {
         return Expressions.numberTemplate(Integer.class,
                 "TIMESTAMPDIFF(DAY, {0}, {1})",
-                fridgeIngredient.storageStartDate,
+                Expressions.currentDate(),
                 fridgeIngredient.expirationDate
         );
     }
