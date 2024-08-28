@@ -49,7 +49,7 @@ public class IngredientController implements IngredientControllerOpenApi{
     @PatchMapping("/{ingredientId}")
     public ResponseEntity<Void> update(
             @PathVariable Long ingredientId,
-            @RequestBody IngredientUpdateRequest request) {
+            @ModelAttribute IngredientUpdateRequest request) {
 
         // TODO : 인증 추가
         // 임시 회원 아이디

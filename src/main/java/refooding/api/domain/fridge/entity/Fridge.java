@@ -28,7 +28,7 @@ public class Fridge extends BaseTimeEntity {
         this.member = member;
     }
 
-    public boolean validateMember(Long memberId) {
-        return getMember().getId().equals(memberId);
+    public boolean isAuthor(Member member) {
+        return this.member.equals(member);
     }
 }

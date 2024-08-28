@@ -53,8 +53,18 @@ public class FridgeIngredient extends BaseTimeEntity {
         this.expirationDate = expirationDate;
     }
 
+    public void updateImages(List<IngredientImage> newImages) {
+        this.images.addAll(newImages);
+        this.thumbnailUrl = getThumbnailUrl(newImages);
+        newImages.forEach(image -> image.setIngredient(this));
+    }
+
     public void delete() {
         this.deletedDate = LocalDateTime.now();
+    }
+
+    private static String getThumbnailUrl(List<IngredientImage> images) {
+        return images.isEmpty() ? null : images.get(0).getUrl();
     }
 
 }

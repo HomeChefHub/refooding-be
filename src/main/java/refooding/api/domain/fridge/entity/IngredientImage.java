@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -31,5 +33,9 @@ public class IngredientImage extends BaseTimeEntity {
 
     public void setIngredient(FridgeIngredient fridgeIngredient) {
         this.fridgeIngredient = fridgeIngredient;
+    }
+
+    public void delete() {
+        this.deletedDate = LocalDateTime.now();
     }
 }
