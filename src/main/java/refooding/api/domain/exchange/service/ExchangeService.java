@@ -14,10 +14,10 @@ public interface ExchangeService {
 
     ExchangeDetailResponse getExchangeById(Long exchangeId);
 
-    Long create(ExchangeCreateRequest request);
+    Long create(Long memberId, ExchangeCreateRequest request);
 
-    void update(Long exchangeId, ExchangeUpdateRequest request);
+    void update(Long memberId, Long exchangeId, ExchangeUpdateRequest request);
 
-    void delete(Long exchangeId);
+    void delete(Long memberId, Long exchangeId);
 
 }

@@ -2,10 +2,12 @@ package refooding.api.domain.exchange.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
 import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
 import refooding.api.domain.exchange.dto.response.ExchangeDetailResponse;
@@ -18,6 +20,7 @@ import refooding.api.domain.exchange.service.RegionService;
 import java.net.URI;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/exchanges")
 @RequiredArgsConstructor
@@ -48,18 +51,23 @@ public class ExchangeController implements ExchangeControllerOpenApi{
 
     @Override
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @ModelAttribute ExchangeCreateRequest request) {
+    public ResponseEntity<Void> create(@ModelAttribute @Valid ExchangeCreateRequest request) {
         // TODO : 인증 추가
+        // 임시 회원 아이디
+        Long memberId = 1L;
 
-        Long exchangeId = exchangeService.create(request);
+        Long exchangeId = exchangeService.create(memberId, request);
         return ResponseEntity.created(URI.create("/api/v1/exchanges/" + exchangeId)).build();
     }
 
     @Override
     @PatchMapping("/{exchangeId}")
-    public ResponseEntity<Void> update(@PathVariable Long exchangeId, @Valid @RequestBody ExchangeUpdateRequest request){
+    public ResponseEntity<Void> update(@PathVariable Long exchangeId, @ModelAttribute @Valid ExchangeUpdateRequest request){
         // TODO : 인증 추가
-        exchangeService.update(exchangeId, request);
+        // 임시 회원 아이디
+        Long memberId = 1L;
+
+        exchangeService.update(memberId, exchangeId, request);
         return ResponseEntity.ok().build();
     }
 
@@ -67,7 +75,10 @@ public class ExchangeController implements ExchangeControllerOpenApi{
     @DeleteMapping("/{exchangeId}")
     public ResponseEntity<Void> delete(@PathVariable Long exchangeId) {
         // TODO : 인증 추가
-        exchangeService.delete(exchangeId);
+        // 임시 회원 아이디
+        Long memberId = 1L;
+
+        exchangeService.delete(memberId, exchangeId);
         return ResponseEntity.noContent().build();
     }
 

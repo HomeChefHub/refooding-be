@@ -4,7 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 import refooding.api.domain.exchange.entity.ExchangeStatus;
+
+import java.util.List;
 
 public record ExchangeUpdateRequest(
         @NotBlank(message = "제목은 빈 문자열 또는 null일 수 없습니다")
@@ -23,5 +26,11 @@ public record ExchangeUpdateRequest(
 
         @NotNull(message = "교환 상태를 입력해주세요")
         @Schema(description = "교환 상태")
-        ExchangeStatus status
+        ExchangeStatus status,
+
+        @Schema(description = "이미지 목록")
+        List<String> imageUrls,
+
+        @Schema(description = "식재료 이미지")
+        MultipartFile image
 ) {}

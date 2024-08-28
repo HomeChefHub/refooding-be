@@ -31,7 +31,7 @@ public record ExchangeResponse(
         @Schema(description = "생성 시간")
         LocalDateTime createDate,
 
-        @Schema(description = "대표 미지")
+        @Schema(description = "대표 이미지")
         String thumbnailUrl
         // TODO : 회원
 ) {

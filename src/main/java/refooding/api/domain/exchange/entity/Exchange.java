@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import refooding.api.common.domain.BaseTimeEntity;
 import refooding.api.domain.member.entity.Member;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -50,8 +52,8 @@ public class Exchange extends BaseTimeEntity {
         this.status = ExchangeStatus.ACTIVE;
         this.region = region;
         this.member = member;
-        this.images.addAll(images);
-        this.thumbnailUrl = !images.isEmpty() ? images.get(0).getUrl() : null;
+        this.images = images;
+        this.thumbnailUrl = getThumbnailUrl(images);
     }
 
     public void updateExchange(String title, String content, ExchangeStatus status, Region region) {
@@ -61,11 +63,22 @@ public class Exchange extends BaseTimeEntity {
         this.region = region;
     }
 
+    public void updateImages(List<ExchangeImage> newImages) {
+        this.images.addAll(newImages);
+        this.thumbnailUrl = getThumbnailUrl(newImages);
+        newImages.forEach(image -> image.setExchange(this));
+    }
+
     public void delete(){
         this.deletedDate = LocalDateTime.now();
     }
 
-    public boolean validateMember(Long memberId) {
-        return getMember().getId().equals(memberId);
+    public boolean isAuthor(Member member) {
+        return this.member.equals(member);
     }
+
+    private static String getThumbnailUrl(List<ExchangeImage> images) {
+        return images.isEmpty() ? null : images.get(0).getUrl();
+    }
+
 }
