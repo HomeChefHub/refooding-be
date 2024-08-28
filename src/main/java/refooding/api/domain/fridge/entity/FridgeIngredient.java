@@ -60,7 +60,7 @@ public class FridgeIngredient extends BaseTimeEntity {
     }
 
     public void delete() {
-        this.deletedDate = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 
     private static String getThumbnailUrl(List<IngredientImage> images) {

@@ -52,10 +52,10 @@ public class RoomServiceImpl implements RoomService {
         }
 
         // 채팅에 다른 회원을 초대한 회원(inviter)과 채팅에 초대된 회원(receiver) 조회
-        Member inviter = memberRepository.findByIdAndDeletedDateIsNull(inviterId)
+        Member inviter = memberRepository.findByIdAndDeletedAtIsNull(inviterId)
                 // TODO : 에러처리
                 .orElseThrow(() -> new CustomException(ExceptionCode.INTERNAL_SERVER_ERROR));
-        Member receiver = memberRepository.findByIdAndDeletedDateIsNull(receiverId)
+        Member receiver = memberRepository.findByIdAndDeletedAtIsNull(receiverId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
 
         List<Long> ids = new ArrayList<>();
@@ -78,7 +78,7 @@ public class RoomServiceImpl implements RoomService {
         // TODO : 회원 도메인 구현시 적용
         // 임시 회원 아이디
         Long memberId = 1L;
-        Member findMember = memberRepository.findByIdAndDeletedDateIsNull(memberId)
+        Member findMember = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 // TODO : 에러처리
                 .orElseThrow(() -> new CustomException(ExceptionCode.INTERNAL_SERVER_ERROR));
 
@@ -114,7 +114,7 @@ public class RoomServiceImpl implements RoomService {
         // TODO : 회원 도메인 구현시 적용
         // 임시 회원 아이디
         Long memberId = 1L;
-        Member findMember = memberRepository.findByIdAndDeletedDateIsNull(memberId)
+        Member findMember = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 // TODO : 에러처리
                 .orElseThrow(() -> new CustomException(ExceptionCode.INTERNAL_SERVER_ERROR));
 

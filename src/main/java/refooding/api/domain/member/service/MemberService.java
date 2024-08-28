@@ -30,7 +30,7 @@ public class MemberService {
     }
 
     private void validateDuplicateMember(Member member) {
-        memberRepository.findByNameAndDeletedDateIsNull(member.getName())
+        memberRepository.findByNameAndDeletedAtIsNull(member.getName())
                 .ifPresent(m -> {
                     throw new IllegalStateException("이름이 같은 회원은 회원 가입할 수 없습니다.");
                 });
@@ -49,7 +49,7 @@ public class MemberService {
      * 회원 목록 조회 - 탈퇴하지 않는 회원만 조회
      */
     public List<MemberResponse> findMembers() {
-        return memberRepository.findAllByDeletedDateIsNull().stream()
+        return memberRepository.findAllByDeletedAtIsNull().stream()
                 .map(this::convertToDto)
                 .toList();
     }
@@ -58,7 +58,7 @@ public class MemberService {
      * 회원 상세 조회
      */
     public MemberResponse findOne(Long memberId){
-        Member member = memberRepository.findByIdAndDeletedDateIsNull(memberId)
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new IllegalStateException("id에 해당하는 회원이 없습니다."));
         return convertToDto(member);
     }
@@ -68,7 +68,7 @@ public class MemberService {
      */
     @Transactional
     public void updateMemberName(Long memberId, String newName) {
-        Member member = memberRepository.findByIdAndDeletedDateIsNull(memberId)
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new IllegalStateException("id에 해당하는 회원이 없습니다."));
         member.updateName(newName);
     }
@@ -79,7 +79,7 @@ public class MemberService {
      */
     @Transactional
     public void deleteMember(Long memberId) {
-        Member member = memberRepository.findByIdAndDeletedDateIsNull(memberId)
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new IllegalStateException("id에 해당하는 회원이 없습니다."));
         member.delete();
     }

@@ -54,7 +54,7 @@ public class RoomMember extends BaseTimeEntity {
     }
 
     public void delete() {
-        this.deletedDate = LocalDateTime.now();
+        this.deletedAt = LocalDateTime.now();
     }
 
     public void updateLastReadTime() {

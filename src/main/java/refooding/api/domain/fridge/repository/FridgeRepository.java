@@ -10,6 +10,6 @@ public interface FridgeRepository extends JpaRepository<Fridge, Long> {
     Optional<Fridge> findFridgeByMemberId(Long memberId);
     @Query("select f from Fridge f " +
             "join fetch f.member m " +
-            "where m.deletedDate is null")
+            "where m.deletedAt is null")
     Optional<Fridge> findFridgeWithMemberByMemberId(Long memberId);
 }

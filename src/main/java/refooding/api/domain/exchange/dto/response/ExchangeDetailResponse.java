@@ -50,7 +50,7 @@ public record ExchangeDetailResponse(
                 exchange.getRegion().getParent().getName(),
                 exchange.getRegion().getName(),
                 exchange.getStatus(),
-                exchange.getCreatedDate(),
+                exchange.getCreatedAt(),
                 imageUrls
                 );
     }

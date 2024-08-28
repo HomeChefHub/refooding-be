@@ -160,7 +160,7 @@ public class IngredientServiceImpl implements IngredientService{
     }
 
     private Member getMemberById(Long memberId) {
-        return memberRepository.findByIdAndDeletedDateIsNull(memberId)
+        return memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
     }
 

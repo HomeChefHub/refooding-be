@@ -39,7 +39,7 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
                                 parentRegion.name,
                                 region.name,
                                 exchange.status,
-                                exchange.createdDate,
+                                exchange.createdAt,
                                 exchange.thumbnailUrl
                         )
                 )
@@ -76,7 +76,7 @@ public class ExchangeCustomRepositoryImpl implements ExchangeCustomRepository{
     }
 
     private static BooleanExpression notDeleted() {
-        return exchange.deletedDate.isNull();
+        return exchange.deletedAt.isNull();
     }
 
 

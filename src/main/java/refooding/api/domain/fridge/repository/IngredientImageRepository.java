@@ -9,6 +9,6 @@ import java.util.List;
 public interface IngredientImageRepository extends JpaRepository<IngredientImage, Long>, IngredientImageCustomRepository {
     @Query("select i from IngredientImage i " +
             "where i.fridgeIngredient.id = :ingredientId " +
-            "and i.deletedDate is null")
+            "and i.deletedAt is null")
     List<IngredientImage> findAllByIngredientId(Long ingredientId);
 }

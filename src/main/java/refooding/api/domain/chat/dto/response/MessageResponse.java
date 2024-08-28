@@ -32,7 +32,7 @@ public record MessageResponse(
                 message.getSender().getId(),
                 message.getSender().getName(),
                 message.getContent(),
-                message.getCreatedDate()
+                message.getCreatedAt()
         );
     }
 }
