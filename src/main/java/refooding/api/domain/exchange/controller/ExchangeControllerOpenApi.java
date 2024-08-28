@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 import refooding.api.domain.exchange.dto.request.ExchangeCreateRequest;
 import refooding.api.domain.exchange.dto.request.ExchangeUpdateRequest;
 import refooding.api.domain.exchange.dto.response.ExchangeDetailResponse;

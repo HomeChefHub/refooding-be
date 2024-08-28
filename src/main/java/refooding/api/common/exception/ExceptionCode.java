@@ -11,6 +11,8 @@ public enum ExceptionCode {
     BLANK_FILE_NAME(HttpStatus.BAD_REQUEST, "파일 이름은 비어있을 수 없습니다"),
     INVALID_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "잘못된 파일 형식입니다"),
     UNSUPPORTED_FILE_EXTENSION(HttpStatus.BAD_REQUEST, "지원하지않는 파일 확장자입니다"),
+    MAX_IMAGE_COUNT_EXCEEDED(HttpStatus.BAD_REQUEST, "최대 업로드 이미지 수를 초과했습니다"),
+    INVALID_S3_URL(HttpStatus.BAD_REQUEST, "S3 URL 형식이 올바르지 않습니다"),
 
     // 401
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다"),
@@ -26,7 +28,7 @@ public enum ExceptionCode {
     // 500
     FILE_CONVERSION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "파일 변환중 오류가 발생했습니다"),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 에러가 발생했습니다"),
-    TEST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "테스트 에러입니");
+    TEST_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "테스트 에러입니다");
 
     private final HttpStatus status;
     private final String message;

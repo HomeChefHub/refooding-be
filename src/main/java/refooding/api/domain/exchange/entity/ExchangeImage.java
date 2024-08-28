@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,4 +36,7 @@ public class ExchangeImage extends BaseTimeEntity {
         this.exchange = exchange;
     }
 
+    public void delete() {
+        this.deletedDate = LocalDateTime.now();
+    }
 }

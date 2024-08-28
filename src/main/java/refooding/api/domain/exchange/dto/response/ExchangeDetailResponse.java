@@ -40,10 +40,7 @@ public record ExchangeDetailResponse(
         List<String> imageUrls
 
 ) {
-    public static ExchangeDetailResponse from(Exchange exchange) {
-        List<String> imageUrls = exchange.getImages().stream()
-                .map(ExchangeImage::getUrl)
-                .toList();
+    public static ExchangeDetailResponse from(Exchange exchange, List<String> imageUrls) {
         return new ExchangeDetailResponse(
                 exchange.getId(),
                 exchange.getTitle(),

@@ -1,7 +1,8 @@
-package refooding.api.common.aws;
+package refooding.api.common.s3;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,13 +12,17 @@ import org.springframework.web.multipart.MultipartFile;
 import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
 import refooding.api.common.util.ImageUtil;
+import refooding.api.domain.fridge.entity.FridgeIngredient;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,22 +33,38 @@ public class S3Uploader {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
     private final String IMAGE_BASE_URI = "images/";
     private final String EXCHANGE_URI = "exchange/";
-    private final String REFRIGERATOR_URI = "refrigerator/";
+    private final String INGREDIENT_URL = "fridge_ingredient/";
 
-    public List<String> uploadExchangeImg(List<MultipartFile> files) {
-        files.forEach(ImageUtil::validate);
+    public String uploadExchangeImage(MultipartFile file) {
+        ImageUtil.validate(file);
+        return uploadImage(file, EXCHANGE_URI);
+    }
+
+    public List<String> uploadExchangeImages(List<MultipartFile> files) {
         return files.stream()
-                .map(file -> uploadImage(file, EXCHANGE_URI))
+                .map(this::uploadExchangeImage)
                 .toList();
     }
 
-    public List<String> uploadFridgeIngredientImg(List<MultipartFile> files) {
-        files.forEach(ImageUtil::validate);
+    public String uploadIngredientImage(MultipartFile file) {
+        ImageUtil.validate(file);
+        return uploadImage(file, INGREDIENT_URL);
+    }
+
+    public List<String> uploadIngredientImages(List<MultipartFile> files) {
         return files.stream()
-                .map(file -> uploadImage(file, REFRIGERATOR_URI))
+                .map(this::uploadIngredientImage)
                 .toList();
+    }
+
+    public void deleteFiles(List<String> imageUrls) {
+        List<String> keys = imageUrls.stream()
+                .map(this::getObjectKeyFromUrl)
+                .toList();
+        keys.forEach(this::deleteS3);
     }
 
     private String uploadImage(MultipartFile file, String subDir) {
@@ -87,6 +108,11 @@ public class S3Uploader {
         return amazonS3Client.getUrl(bucket, fileName).toString();
     }
 
+    public void deleteS3(String key) {
+        DeleteObjectRequest deleteObjectRequest = new DeleteObjectRequest(bucket, key);
+        amazonS3Client.deleteObject(deleteObjectRequest);
+    }
+
     /**
      *  convertMultipartFileToFile 함수로 만들어진 File 로컬에서 제거
      */
@@ -95,6 +121,25 @@ public class S3Uploader {
             return;
         }
         log.info("File delete fail, fileName = {}", targetFile.getName());
+    }
+
+    private String getObjectKeyFromUrl(String imageUrl) {
+        URI uri = createUri(imageUrl);
+        String path = uri.getPath();
+
+        if (path != null && path.startsWith("/")) {
+            return path.substring(1);
+        }
+
+        throw new CustomException(ExceptionCode.INVALID_S3_URL);
+    }
+
+    private URI createUri(String uri) {
+        try {
+            return new URI(uri);
+        } catch (URISyntaxException e) {
+            throw new CustomException(ExceptionCode.INVALID_S3_URL);
+        }
     }
 
 }
