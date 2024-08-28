@@ -5,8 +5,10 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record IngredientUpdateRequest(
         @NotBlank(message = "재료 이름은 빈 문자열 또는 null일 수 없습니다")
@@ -16,6 +18,12 @@ public record IngredientUpdateRequest(
 
         @NotNull(message = "재료 유효기간은 null일 수 없습니다")
         @Future(message = "유효기간은 현재 날짜 이후로 설정해야 합니다")
-        LocalDateTime expirationDate
+        LocalDateTime expirationDate,
+
+        @Schema(description = "이미지 목록")
+        String thumbnailUrl,
+
+        @Schema(description = "식재료 이미지 파일")
+        MultipartFile image
 ) {
 }

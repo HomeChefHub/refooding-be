@@ -7,9 +7,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import refooding.api.common.aws.S3Uploader;
 import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
+import refooding.api.common.s3.S3Uploader;
 import refooding.api.domain.fridge.dto.request.IngredientCreateRequest;
 import refooding.api.domain.fridge.dto.request.IngredientUpdateRequest;
 import refooding.api.domain.fridge.dto.response.IngredientResponse;
@@ -21,7 +21,7 @@ import refooding.api.domain.fridge.repository.*;
 import refooding.api.domain.member.entity.Member;
 import refooding.api.domain.member.repository.MemberRepository;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -64,7 +64,6 @@ public class IngredientServiceImpl implements IngredientService{
     @Override
     public Long create(Long memberId, IngredientCreateRequest request) {
         Member findMember = getMemberById(memberId);
-
         // TODO : 로그 작성
         Fridge findFridge = fridgeRepository.findFridgeByMemberId(findMember.getId())
                 .orElseThrow(() -> new RuntimeException("냉장고를 찾을 수 없습니다"));
@@ -72,26 +71,13 @@ public class IngredientServiceImpl implements IngredientService{
         // 기존 등록된 재료가 없다면 생성
         Ingredient findIngredient = getOrCreate(request.name());
 
-        // S3에 파일 업로드
-        boolean isFileEmpty = isFileListEmpty(request.ingredientImages());
-        List<MultipartFile> imageFiles = request.ingredientImages();
-        List<IngredientImage> images = new ArrayList<>();
-
-        if (!isFileEmpty) {
-            List<String> ingredientImageUrls = s3Uploader.uploadFridgeIngredientImg(imageFiles);
-            images = ingredientImageUrls.stream()
-                    .map(IngredientImage::new)
-                    .toList();
-        }
+        // S3 이미지 업로드
+        List<IngredientImage> ingredientImages = uploadIngredientImages(request.image());
 
         // 냉장고 재료 등록
-        FridgeIngredient fridgeIngredient = new FridgeIngredient(findFridge, findIngredient, request.expirationDate(), images);
-        fridgeIngredientRepository.save(fridgeIngredient);
-
-        if (!isFileEmpty) {
-            images.forEach(image -> image.setIngredient(fridgeIngredient));
-            ingredientImageRepository.saveAll(images);
-        }
+        FridgeIngredient fridgeIngredient = request.toFridgeIngredient(findFridge, findIngredient, request.expirationDate(), ingredientImages);
+        FridgeIngredient savedIngredient = fridgeIngredientRepository.save(fridgeIngredient);
+        saveIngredientImages(savedIngredient, ingredientImages);
 
         return fridgeIngredient.getId();
     }
@@ -101,36 +87,27 @@ public class IngredientServiceImpl implements IngredientService{
     @Override
     public void update(Long memberId, Long fridgeIngredientId, IngredientUpdateRequest request) {
         Member findMember = getMemberById(memberId);
-
         // TODO : 로그 작성
-        Fridge findFridge = fridgeRepository.findFridgeWithMemberByMemberId(findMember.getId())
-                .orElseThrow(() -> new RuntimeException("냉장고가 존재하지 않습니다"));
-        if (!findFridge.validateMember(findMember.getId())) {
-            throw new CustomException(ExceptionCode.UNAUTHORIZED);
-        }
+        Fridge findFridge = getFridgeWithMemberByMemberId(findMember.getId());
+        validateAuthor(findMember, findFridge);
 
-        FridgeIngredient fridgeIngredient = fridgeIngredientRepository.findFridgeIngredientById(fridgeIngredientId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_INGREDIENT));
-
-        Ingredient ingredient = getOrCreate(request.name());
+        // 재료 업데이트
+        FridgeIngredient fridgeIngredient = getFridgeIngredient(fridgeIngredientId);
+        Ingredient ingredient = getOrCreate(request.name()); // 기존 등록된 재료가 없다면 생성
         fridgeIngredient.updateFridgeIngredient(ingredient, request.expirationDate());
+        updateIngredientImages(fridgeIngredient, request);
     }
 
     @Transactional
     @Override
     public void delete(Long memberId, Long fridgeIngredientId) {
         Member findMember = getMemberById(memberId);
-
         // TODO : 로그 작성
-        Fridge findFridge = fridgeRepository.findFridgeWithMemberByMemberId(findMember.getId())
-                .orElseThrow(() -> new RuntimeException("냉장고가 존재하지 않습니다"));
-        if (!findFridge.validateMember(findMember.getId())) {
-            throw new CustomException(ExceptionCode.UNAUTHORIZED);
-        }
+        Fridge findFridge = getFridgeWithMemberByMemberId(findMember.getId());
+        validateAuthor(findMember, findFridge);
+        FridgeIngredient fridgeIngredient = getFridgeIngredient(fridgeIngredientId);
 
-        FridgeIngredient fridgeIngredient = fridgeIngredientRepository.findFridgeIngredientById(fridgeIngredientId)
-                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_INGREDIENT));
-
+        deleteOldImages(fridgeIngredientId);
         fridgeIngredient.delete();
     }
 
@@ -143,13 +120,68 @@ public class IngredientServiceImpl implements IngredientService{
                 });
     }
 
-    private boolean isFileListEmpty(List<MultipartFile> imageFiles) {
-        return imageFiles == null || imageFiles.isEmpty();
+    private List<IngredientImage> uploadIngredientImages(MultipartFile image) {
+        if (image == null || image.isEmpty()) {
+            return Collections.emptyList();
+        }
+        String imageUrl = s3Uploader.uploadIngredientImage(image);
+        return Collections.singletonList(new IngredientImage(imageUrl));
+    }
+
+    private void updateIngredientImages(FridgeIngredient fridgeIngredient, IngredientUpdateRequest request) {
+        List<IngredientImage> newImages = uploadIngredientImages(request.image());
+        boolean isNullThumbnail = request.thumbnailUrl() == null;
+
+        // 기존 이미지가 없으면서, 새로운 이미지 없으면 모든 이미지 삭제
+        if (isNullThumbnail && newImages.isEmpty()) {
+            deleteOldImages(fridgeIngredient.getId());
+            fridgeIngredient.updateImages(newImages);
+            return;
+        }
+
+        // 새로운 이미지가 있으면 기존 이미지 삭제 후 새로운 이미지 저장
+        if (!newImages.isEmpty()) {
+            deleteOldImages(fridgeIngredient.getId());
+            saveIngredientImages(fridgeIngredient, newImages);
+            fridgeIngredient.updateImages(newImages);
+        }
+    }
+
+    private void saveIngredientImages(FridgeIngredient fridgeIngredient, List<IngredientImage> images) {
+        images.forEach(image -> {
+            image.setIngredient(fridgeIngredient);
+            ingredientImageRepository.save(image);
+        });
+    }
+
+    private void deleteOldImages(Long fridgeIngredientId) {
+        List<IngredientImage> oldImages = getImageByIngredientId(fridgeIngredientId);
+        oldImages.forEach(IngredientImage::delete);
     }
 
     private Member getMemberById(Long memberId) {
         return memberRepository.findByIdAndDeletedDateIsNull(memberId)
                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
+    }
+
+    private List<IngredientImage> getImageByIngredientId(Long ingredientId) {
+        return ingredientImageRepository.findAllByIngredientId(ingredientId);
+    }
+
+    private Fridge getFridgeWithMemberByMemberId(Long memberId) {
+        return fridgeRepository.findFridgeWithMemberByMemberId(memberId)
+                .orElseThrow(() -> new RuntimeException("냉장고가 존재하지 않습니다"));
+    }
+
+    private FridgeIngredient getFridgeIngredient(Long fridgeIngredientId) {
+        return fridgeIngredientRepository.findFridgeIngredientById(fridgeIngredientId)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_INGREDIENT));
+    }
+
+    private void validateAuthor(Member member, Fridge fridge) {
+        if (!fridge.isAuthor(member)) {
+            throw new CustomException(ExceptionCode.UNAUTHORIZED);
+        }
     }
 
 }
