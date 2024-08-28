@@ -40,9 +40,14 @@ public class IngredientServiceImpl implements IngredientService{
     @Override
     public Slice<IngredientResponse> getIngredients(Long memberId, String ingredientName, Long lastIngredientId, Integer daysUntilExpiration, Pageable pageable) {
         Member findMember = getMemberById(memberId);
-        // TODO : 로그 작성
-        Fridge findFridge = fridgeRepository.findFridgeByMemberId(findMember.getId())
-                .orElseThrow(() -> new RuntimeException("냉장고를 찾을 수 없습니다"));
+
+        // 기존 생성된 냉장고가 없다면 생성
+        Fridge findFridge = fridgeRepository.findFridgeByMemberId(memberId)
+                .orElseGet(()->{
+                    Fridge fridge = new Fridge(findMember);
+                    fridgeRepository.save(fridge);
+                    return fridge;
+                });
 
         return fridgeIngredientRepository.findFridgeIngredientByCondition(
                 new FridgeIngredientSearchCondition(
@@ -60,13 +65,9 @@ public class IngredientServiceImpl implements IngredientService{
     public Long create(Long memberId, IngredientCreateRequest request) {
         Member findMember = getMemberById(memberId);
 
-        // 기존 생성된 냉장고가 없다면 생성
-        Fridge findFridge = fridgeRepository.findFridgeByMemberId(memberId)
-                .orElseGet(()->{
-                    Fridge fridge = new Fridge(findMember);
-                    fridgeRepository.save(fridge);
-                    return fridge;
-                });
+        // TODO : 로그 작성
+        Fridge findFridge = fridgeRepository.findFridgeByMemberId(findMember.getId())
+                .orElseThrow(() -> new RuntimeException("냉장고를 찾을 수 없습니다"));
 
         // 기존 등록된 재료가 없다면 생성
         Ingredient findIngredient = getOrCreate(request.name());
