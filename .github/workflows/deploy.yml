@@ -23,6 +23,9 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
+      - name: Jar File Name Change
+        run: mv ./build/libs/*SNAPSHOT.jar ./refooding-api.jar
+
       - name: SCP To Lightsail
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -30,7 +33,7 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_USERNAME }}
           key: ${{ secrets.LIGHTSAIL_KEY }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
-          source: "./build/libs/*SNAPSHOT.jar"
+          source: refooding-api.jar
           target: /home/ubuntu/refooding-api/new
 
       - name: Deploy To Lightsail
@@ -46,8 +49,8 @@ jobs:
           script: |
             rm -rf /home/ubuntu/refooding-api/current
             mkdir /home/ubuntu/refooding-api/current
-            mv /home/ubuntu/refooding-api/new/*SNAPSHOT.jar /home/ubuntu/refooding-api/current/*SNAPSHOT.jar
+            mv /home/ubuntu/refooding-api/new/refooding-api.jar /home/ubuntu/refooding-api/current/refooding-api.jar
             cd /home/ubuntu/refooding-api/current
             sudo fuser -k -n tcp 8080 || true
-            nohup java -jar *SNAPSHOT.jar > ./output.log 2>&1 &
+            nohup java -jar refooding-api.jar > ./output.log 2>&1 &
             rm -rf /home/ubuntu/refooding-api/new
