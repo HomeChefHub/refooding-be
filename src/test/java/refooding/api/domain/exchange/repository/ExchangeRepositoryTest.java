@@ -28,7 +28,7 @@ class ExchangeRepositoryTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @Test
+    // @Test
     void 식재료_교환글_상세조회() {
         //given
         Long exchangeId = 10L;

@@ -21,7 +21,7 @@ jobs:
         run: echo "${{ secrets.APPLICATION_SECRET_PROPERTIES }}" > src/main/resources/application-secret.yml
 
       - name: Build with Gradle
-        run: ./gradlew clean build -Pprofile=dev
+        run: ./gradlew clean build
 
       - name: SCP To Lightsail
         uses: appleboy/scp-action@v0.1.7
