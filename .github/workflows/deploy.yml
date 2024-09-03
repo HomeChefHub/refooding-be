@@ -18,7 +18,7 @@ jobs:
           java-version: '17'
 
       - name: Set YML
-        run: echo "${{ secrets.APPLICATION_SECRET_PROPERTIES }} > ./src/main/resources/application-secret.yml
+        run: echo "${{ secrets.APPLICATION_SECRET_PROPERTIES }} > src/main/resources/application-secret.yml
 
       - name: Build with Gradle
         run: ./gradlew clean build
