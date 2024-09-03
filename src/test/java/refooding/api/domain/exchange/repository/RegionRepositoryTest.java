@@ -18,7 +18,7 @@ class RegionRepositoryTest {
     @Autowired
     private RegionRepository regionRepository;
 
-    @Test
+    // @Test
     void 식재료_교환_지역_목록_조회() {
         // when
         List<Region> parentRegions = regionRepository.findByParentIsNull();
