@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
 import refooding.api.common.util.ImageUtil;
-import refooding.api.domain.fridge.entity.FridgeIngredient;
 
 import java.io.File;
 import java.io.FileOutputStream;

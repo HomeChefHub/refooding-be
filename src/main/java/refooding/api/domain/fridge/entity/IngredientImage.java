@@ -17,13 +17,13 @@ public class IngredientImage extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FridgeIngredient_id")
-    private FridgeIngredient fridgeIngredient;
+    @JoinColumn(name = "memberIngredient_id")
+    private MemberIngredient memberIngredient;
 
     private String url;
 
-    public IngredientImage(FridgeIngredient fridgeIngredient, String url) {
-        this.fridgeIngredient = fridgeIngredient;
+    public IngredientImage(MemberIngredient memberIngredient, String url) {
+        this.memberIngredient = memberIngredient;
         this.url = url;
     }
 
@@ -31,8 +31,8 @@ public class IngredientImage extends BaseTimeEntity {
         this(null, url);
     }
 
-    public void setIngredient(FridgeIngredient fridgeIngredient) {
-        this.fridgeIngredient = fridgeIngredient;
+    public void setIngredient(MemberIngredient memberIngredient) {
+        this.memberIngredient = memberIngredient;
     }
 
     public void delete() {
