@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
+import refooding.api.domain.member.entity.Member;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,15 +14,15 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class FridgeIngredient extends BaseTimeEntity {
+public class MemberIngredient extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "fridge_id")
-    private Fridge fridge;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id")
@@ -35,11 +36,11 @@ public class FridgeIngredient extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime expirationDate;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "fridgeIngredient")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "memberIngredient")
     private List<IngredientImage> images = new ArrayList<>();
 
-    public FridgeIngredient(Fridge fridge, Ingredient ingredient, LocalDateTime expirationDate, List<IngredientImage> images) {
-        this.fridge = fridge;
+    public MemberIngredient(Member member, Ingredient ingredient, LocalDateTime expirationDate, List<IngredientImage> images) {
+        this.member = member;
         this.ingredient = ingredient;
         this.storageStartDate = LocalDateTime.now();
         this.expirationDate = expirationDate;
@@ -61,6 +62,10 @@ public class FridgeIngredient extends BaseTimeEntity {
 
     public void delete() {
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public boolean isAuthor(Member member) {
+        return this.member.equals(member);
     }
 
     private static String getThumbnailUrl(List<IngredientImage> images) {

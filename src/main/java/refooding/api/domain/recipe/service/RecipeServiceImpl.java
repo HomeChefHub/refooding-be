@@ -128,13 +128,13 @@ public class RecipeServiceImpl implements RecipeService{
     //             .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_MEMBER));
     //
     //     // 멤버의 유효한 재료들을 유통기한 순으로 조회
-    //     List<FridgeIngredient> ingredients = memberIngredientRepository.findActiveIngredientsByMemberIdOrderedByEndDate(memberId);
+    //     List<MemberIngredient> ingredients = memberIngredientRepository.findActiveIngredientsByMemberIdOrderedByEndDate(memberId);
     //
     //     // 재료 이름 추출 및 재료 ID와 최소 유통기한 매핑
     //     Map<String, LocalDateTime> ingredientMinEndDateMap = ingredients.stream()
     //             .collect(Collectors.toMap(
     //                     ingredient -> ingredient.getIngredient().getName(),
-    //                     FridgeIngredient::getEndDate,
+    //                     MemberIngredient::getEndDate,
     //                     (existing, replacement) -> existing.isBefore(replacement) ? existing : replacement // 중복 키 처리
     //             ));
     //

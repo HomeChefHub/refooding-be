@@ -1,7 +1,6 @@
 package refooding.api.domain.fridge.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberTemplate;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -15,22 +14,19 @@ import org.springframework.util.StringUtils;
 import refooding.api.common.qeurydsl.QuerydslRepositoryUtils;
 import refooding.api.domain.fridge.dto.response.IngredientResponse;
 import refooding.api.domain.fridge.dto.response.QIngredientResponse;
-import refooding.api.domain.fridge.entity.QFridgeIngredient;
 
-import java.util.Date;
-
-import static refooding.api.domain.fridge.entity.QFridgeIngredient.fridgeIngredient;
 import static refooding.api.domain.fridge.entity.QIngredient.ingredient;
+import static refooding.api.domain.fridge.entity.QMemberIngredient.*;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
-public class FridgeIngredientCustomRepositoryImpl implements FridgeIngredientCustomRepository {
+public class MemberIngredientCustomRepositoryImpl implements MemberIngredientCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Slice<IngredientResponse> findFridgeIngredientByCondition(FridgeIngredientSearchCondition condition, Pageable pageable) {
+    public Slice<IngredientResponse> findMemberIngredientByCondition(MemberIngredientSearchCondition condition, Pageable pageable) {
 
         NumberTemplate<Integer> daysUntilExpiration = calculateDaysUntilExpiration();
 
@@ -38,33 +34,33 @@ public class FridgeIngredientCustomRepositoryImpl implements FridgeIngredientCus
         JPAQuery<IngredientResponse> content = jpaQueryFactory
                 .select(
                         new QIngredientResponse(
-                                fridgeIngredient.id,
+                                memberIngredient.id,
                                 ingredient.name,
                                 daysUntilExpiration,
-                                fridgeIngredient.storageStartDate,
-                                fridgeIngredient.expirationDate,
-                                fridgeIngredient.thumbnailUrl
+                                memberIngredient.storageStartDate,
+                                memberIngredient.expirationDate,
+                                memberIngredient.thumbnailUrl
                         )
                 )
-                .from(fridgeIngredient)
-                .leftJoin(fridgeIngredient.ingredient, ingredient)
+                .from(memberIngredient)
+                .leftJoin(memberIngredient.ingredient, ingredient)
                 .where(
-                        fridgeIdEq(condition.fridgeId()),
+                        memberIdEq(condition.memberId()),
                         ingredientNameContains(condition.ingredientName()),
                         cursorCondition(daysUntilExpiration, condition.daysUntilExpiration(), condition.lastIngredientId()),
                         notDeleted()
 
                 )
                 .orderBy(daysUntilExpiration.asc(),
-                        fridgeIngredient.createdAt.desc(),
-                        fridgeIngredient.id.asc());
+                        memberIngredient.createdAt.desc(),
+                        memberIngredient.id.asc());
 
         return QuerydslRepositoryUtils.fetchSlice(content, pageable);
 
     }
 
-    private BooleanExpression fridgeIdEq(Long fridgeId) {
-        return fridgeId != null ? QFridgeIngredient.fridgeIngredient.fridge.id.eq(fridgeId) : null;
+    private BooleanExpression memberIdEq(Long memberId) {
+        return memberId != null ? memberIngredient.member.id.eq(memberId) : null;
     }
 
     private BooleanExpression ingredientNameContains(String ingredientName) {
@@ -95,18 +91,18 @@ public class FridgeIngredientCustomRepositoryImpl implements FridgeIngredientCus
     }
 
     public static BooleanExpression idLt(Long lastIngredientId) {
-        return lastIngredientId != null ? fridgeIngredient.id.lt(lastIngredientId) : null;
+        return lastIngredientId != null ? memberIngredient.id.lt(lastIngredientId) : null;
     }
 
     private static BooleanExpression notDeleted() {
-        return fridgeIngredient.deletedAt.isNull();
+        return memberIngredient.deletedAt.isNull();
     }
 
     private NumberTemplate<Integer> calculateDaysUntilExpiration() {
         return Expressions.numberTemplate(Integer.class,
                 "TIMESTAMPDIFF(DAY, {0}, {1})",
                 Expressions.currentDate(),
-                fridgeIngredient.expirationDate
+                memberIngredient.expirationDate
         );
     }
 

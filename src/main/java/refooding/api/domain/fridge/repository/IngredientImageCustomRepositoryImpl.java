@@ -33,7 +33,7 @@ public class IngredientImageCustomRepositoryImpl implements IngredientImageCusto
     private MapSqlParameterSource getFridgeIngredientImageToSqlParameterSource(IngredientImage image) {
         final LocalDateTime now = LocalDateTime.now();
         return new MapSqlParameterSource()
-                .addValue("fridgeIngredientId", image.getFridgeIngredient().getId())
+                .addValue("fridgeIngredientId", image.getMemberIngredient().getId())
                 .addValue("url", image.getUrl())
                 .addValue("createdDate", now)
                 .addValue("modifiedDate", now);

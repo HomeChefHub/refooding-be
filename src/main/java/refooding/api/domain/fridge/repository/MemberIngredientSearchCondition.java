@@ -1,8 +1,8 @@
 package refooding.api.domain.fridge.repository;
 
-public record FridgeIngredientSearchCondition(
+public record MemberIngredientSearchCondition(
         String ingredientName,
-        Long fridgeId,
+        Long memberId,
         Long lastIngredientId,
         Integer daysUntilExpiration
 ) {

@@ -6,11 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
-import refooding.api.domain.exchange.entity.Exchange;
-import refooding.api.domain.exchange.entity.ExchangeImage;
-import refooding.api.domain.exchange.entity.Region;
-import refooding.api.domain.fridge.entity.Fridge;
-import refooding.api.domain.fridge.entity.FridgeIngredient;
+import refooding.api.domain.fridge.entity.MemberIngredient;
 import refooding.api.domain.fridge.entity.Ingredient;
 import refooding.api.domain.fridge.entity.IngredientImage;
 import refooding.api.domain.member.entity.Member;
@@ -31,7 +27,7 @@ public record IngredientCreateRequest(
         @Future(message = "유효기간은 현재 날짜 이후로 설정해야 합니다")
         LocalDateTime expirationDate
 ) {
-        public FridgeIngredient toFridgeIngredient(Fridge fridge, Ingredient ingredient, LocalDateTime expirationDate, List<IngredientImage> images) {
-                return new FridgeIngredient(fridge, ingredient, expirationDate, images);
+        public MemberIngredient toFridgeIngredient(Member member, Ingredient ingredient, LocalDateTime expirationDate, List<IngredientImage> images) {
+                return new MemberIngredient(member, ingredient, expirationDate, images);
         }
 }
