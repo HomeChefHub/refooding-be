@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.controller;
+package refooding.api.domain.ingredient.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -6,10 +6,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import refooding.api.domain.fridge.dto.request.IngredientCreateRequest;
-import refooding.api.domain.fridge.dto.request.IngredientUpdateRequest;
-import refooding.api.domain.fridge.dto.response.IngredientResponse;
-import refooding.api.domain.fridge.service.IngredientService;
+import refooding.api.domain.ingredient.dto.request.IngredientCreateRequest;
+import refooding.api.domain.ingredient.dto.request.IngredientUpdateRequest;
+import refooding.api.domain.ingredient.dto.response.IngredientResponse;
+import refooding.api.domain.ingredient.service.IngredientService;
 
 import java.net.URI;
 

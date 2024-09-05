@@ -1,10 +1,10 @@
-package refooding.api.domain.fridge.repository;
+package refooding.api.domain.ingredient.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
-import refooding.api.domain.fridge.entity.IngredientImage;
+import refooding.api.domain.ingredient.entity.IngredientImage;
 
 import java.time.LocalDateTime;
 import java.util.List;

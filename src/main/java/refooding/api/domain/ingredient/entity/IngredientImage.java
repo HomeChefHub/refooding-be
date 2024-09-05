@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.entity;
+package refooding.api.domain.ingredient.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

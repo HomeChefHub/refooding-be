@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.dto.request;
+package refooding.api.domain.ingredient.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
-import refooding.api.domain.fridge.entity.MemberIngredient;
-import refooding.api.domain.fridge.entity.Ingredient;
-import refooding.api.domain.fridge.entity.IngredientImage;
+import refooding.api.domain.ingredient.entity.MemberIngredient;
+import refooding.api.domain.ingredient.entity.Ingredient;
+import refooding.api.domain.ingredient.entity.IngredientImage;
 import refooding.api.domain.member.entity.Member;
 
 import java.time.LocalDateTime;

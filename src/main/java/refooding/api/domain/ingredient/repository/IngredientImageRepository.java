@@ -1,8 +1,8 @@
-package refooding.api.domain.fridge.repository;
+package refooding.api.domain.ingredient.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import refooding.api.domain.fridge.entity.IngredientImage;
+import refooding.api.domain.ingredient.entity.IngredientImage;
 
 import java.util.List;
 

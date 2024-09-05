@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.service;
+package refooding.api.domain.ingredient.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,16 +10,16 @@ import org.springframework.web.multipart.MultipartFile;
 import refooding.api.common.exception.CustomException;
 import refooding.api.common.exception.ExceptionCode;
 import refooding.api.common.s3.S3Uploader;
-import refooding.api.domain.fridge.dto.request.IngredientCreateRequest;
-import refooding.api.domain.fridge.dto.request.IngredientUpdateRequest;
-import refooding.api.domain.fridge.dto.response.IngredientResponse;
-import refooding.api.domain.fridge.entity.Ingredient;
-import refooding.api.domain.fridge.entity.IngredientImage;
-import refooding.api.domain.fridge.entity.MemberIngredient;
-import refooding.api.domain.fridge.repository.IngredientImageRepository;
-import refooding.api.domain.fridge.repository.IngredientRepository;
-import refooding.api.domain.fridge.repository.MemberIngredientRepository;
-import refooding.api.domain.fridge.repository.MemberIngredientSearchCondition;
+import refooding.api.domain.ingredient.dto.request.IngredientCreateRequest;
+import refooding.api.domain.ingredient.dto.request.IngredientUpdateRequest;
+import refooding.api.domain.ingredient.dto.response.IngredientResponse;
+import refooding.api.domain.ingredient.entity.Ingredient;
+import refooding.api.domain.ingredient.entity.IngredientImage;
+import refooding.api.domain.ingredient.entity.MemberIngredient;
+import refooding.api.domain.ingredient.repository.IngredientImageRepository;
+import refooding.api.domain.ingredient.repository.IngredientRepository;
+import refooding.api.domain.ingredient.repository.MemberIngredientRepository;
+import refooding.api.domain.ingredient.repository.MemberIngredientSearchCondition;
 import refooding.api.domain.member.entity.Member;
 import refooding.api.domain.member.repository.MemberRepository;
 

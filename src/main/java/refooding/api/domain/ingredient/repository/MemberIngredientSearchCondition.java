@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.repository;
+package refooding.api.domain.ingredient.repository;
 
 public record MemberIngredientSearchCondition(
         String ingredientName,

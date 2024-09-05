@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.controller;
+package refooding.api.domain.ingredient.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -7,11 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
-import refooding.api.domain.fridge.dto.request.IngredientCreateRequest;
-import refooding.api.domain.fridge.dto.request.IngredientUpdateRequest;
-import refooding.api.domain.fridge.dto.response.IngredientResponse;
+import refooding.api.domain.ingredient.dto.request.IngredientCreateRequest;
+import refooding.api.domain.ingredient.dto.request.IngredientUpdateRequest;
+import refooding.api.domain.ingredient.dto.response.IngredientResponse;
 
-@Tag(name = "냉장고 재료 API")
+@Tag(name = "재료 API")
 public interface IngredientControllerOpenApi {
 
     @Operation(summary = "재료 목록 조회")

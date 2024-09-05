@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.dto.response;
+package refooding.api.domain.ingredient.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import io.swagger.v3.oas.annotations.media.Schema;
