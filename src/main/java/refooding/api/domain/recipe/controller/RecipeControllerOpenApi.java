@@ -11,6 +11,9 @@ import refooding.api.domain.recipe.dto.request.RecipeLikeRequest;
 import refooding.api.domain.recipe.dto.response.RecipeDetailResponse;
 import refooding.api.domain.recipe.dto.response.RecipeLikeResponse;
 import refooding.api.domain.recipe.dto.response.RecipeResponse;
+import refooding.api.domain.recipe.dto.response.RecommendRecipeResponse;
+
+import java.time.LocalDateTime;
 
 @Tag(name = "레시피 API")
 public interface RecipeControllerOpenApi {
@@ -42,6 +45,26 @@ public interface RecipeControllerOpenApi {
     )
     @Parameter(name = "recipeId", description = "레시피 아이디")
     ResponseEntity<RecipeDetailResponse> getRecipeById(Long recipeId);
+
+    @Operation(
+            summary = "추천 레시피 목록 조회",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "레시피 목록 조회 성공")
+            }
+    )
+    @Parameters(
+            value = {
+                    @Parameter(
+                            name = "ingredientName",
+                            description = "레시피명 또는 재료명",
+                            example = "감자"
+                    ),
+                    @Parameter(name = "size", description = "요청 레시피 수(0개 이상~50개 이하)"),
+                    @Parameter(name = "lastRecipeId", description = "이전 요청 목록의 마지막 레시피 아이디"),
+                    @Parameter(name = "expirationDate", description = "이전 요청 목록의 마지막 레시피에 사용된 재료의 만료 일자")
+            }
+    )
+    ResponseEntity<Slice<RecommendRecipeResponse>> getRecommendedRecipes(String ingredientName, int size, Long lastRecipeId, LocalDateTime expirationDate);
 
     @Operation(
             summary = "레시피 좋아요 토글",

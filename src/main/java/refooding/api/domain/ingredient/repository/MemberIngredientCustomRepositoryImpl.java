@@ -16,7 +16,7 @@ import refooding.api.domain.ingredient.dto.response.IngredientResponse;
 import refooding.api.domain.ingredient.dto.response.QIngredientResponse;
 
 import static refooding.api.domain.ingredient.entity.QIngredient.ingredient;
-import static refooding.api.domain.ingredient.entity.QMemberIngredient.*;
+import static refooding.api.domain.ingredient.entity.QMemberIngredient.memberIngredient;
 
 @Slf4j
 @Repository
