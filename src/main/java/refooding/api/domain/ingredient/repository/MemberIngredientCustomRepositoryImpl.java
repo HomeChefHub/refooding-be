@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.repository;
+package refooding.api.domain.ingredient.repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
@@ -12,11 +12,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 import refooding.api.common.qeurydsl.QuerydslRepositoryUtils;
-import refooding.api.domain.fridge.dto.response.IngredientResponse;
-import refooding.api.domain.fridge.dto.response.QIngredientResponse;
+import refooding.api.domain.ingredient.dto.response.IngredientResponse;
+import refooding.api.domain.ingredient.dto.response.QIngredientResponse;
 
-import static refooding.api.domain.fridge.entity.QIngredient.ingredient;
-import static refooding.api.domain.fridge.entity.QMemberIngredient.*;
+import static refooding.api.domain.ingredient.entity.QIngredient.ingredient;
+import static refooding.api.domain.ingredient.entity.QMemberIngredient.memberIngredient;
 
 @Slf4j
 @Repository

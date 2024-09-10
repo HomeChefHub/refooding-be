@@ -1,6 +1,6 @@
-package refooding.api.domain.fridge.repository;
+package refooding.api.domain.ingredient.repository;
 
-import refooding.api.domain.fridge.entity.IngredientImage;
+import refooding.api.domain.ingredient.entity.IngredientImage;
 
 import java.util.List;
 

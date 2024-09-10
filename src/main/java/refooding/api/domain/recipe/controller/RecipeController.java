@@ -10,7 +10,10 @@ import refooding.api.domain.recipe.dto.request.RecipeLikeRequest;
 import refooding.api.domain.recipe.dto.response.RecipeDetailResponse;
 import refooding.api.domain.recipe.dto.response.RecipeLikeResponse;
 import refooding.api.domain.recipe.dto.response.RecipeResponse;
+import refooding.api.domain.recipe.dto.response.RecommendRecipeResponse;
 import refooding.api.domain.recipe.service.RecipeService;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/recipes")
@@ -27,6 +30,22 @@ public class RecipeController implements RecipeControllerOpenApi{
             @RequestParam(required = false) Long lastRecipeId) {
 
         Slice<RecipeResponse> response = recipeService.getRecipes(searchKeyword, lastRecipeId, PageRequest.ofSize(size));
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @GetMapping("recommend")
+    public ResponseEntity<Slice<RecommendRecipeResponse>> getRecommendedRecipes(
+            @RequestParam(required = false) String ingredientName,
+            @RequestParam(required = false, defaultValue = "5") int size,
+            @RequestParam(required = false) Long lastRecipeId,
+            @RequestParam(required = false) LocalDateTime expirationDate) {
+
+        // TODO : 인증 추가
+        // 임시 회원 아이디
+        Long memberId = 1L;
+
+        Slice<RecommendRecipeResponse> response =  recipeService.getRecommendedRecipes(memberId, ingredientName, lastRecipeId, expirationDate, PageRequest.ofSize(size));
         return ResponseEntity.ok(response);
     }
 

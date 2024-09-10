@@ -1,14 +1,10 @@
-package refooding.api.domain.fridge.entity;
+package refooding.api.domain.ingredient.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import refooding.api.common.domain.BaseTimeEntity;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

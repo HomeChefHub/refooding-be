@@ -1,4 +1,4 @@
-package refooding.api.domain.fridge.dto.request;
+package refooding.api.domain.ingredient.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Future;
@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record IngredientUpdateRequest(
         @NotBlank(message = "재료 이름은 빈 문자열 또는 null일 수 없습니다")
