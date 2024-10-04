@@ -24,6 +24,7 @@ import refooding.api.domain.recipe.repository.RecommendRecipeCondition;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 @Service
@@ -37,6 +38,8 @@ public class RecipeServiceImpl implements RecipeService{
     private final RecipeLikeRepository recipeLikeRepository;
 
     private final MemberRepository memberRepository;
+
+    private final ConcurrentHashMap<Long, Recipe> cache = new ConcurrentHashMap<>();
 
     /**
      * 레시피 목록 조회
@@ -66,7 +69,17 @@ public class RecipeServiceImpl implements RecipeService{
      * 레시피 상세 조회
      */
     public RecipeDetailResponse getRecipeById(Long recipeId) {
-        Recipe recipe = getById(recipeId);
+        // Recipe recipe = getById(recipeId);
+        // ConcurrentHashMap 즉, 캐시에 레시피 검색
+        Recipe recipe = cache.get(recipeId);
+
+        // 캐시에 해당 레시피가 없다면
+        if(recipe == null) {
+            // 데이터 베이스에서 해당 아이디의 레시피를 가져온다
+            recipe = getById(recipeId);
+            // getById 메서드에서 데이터가 없는 상황을 예외처리 하고 있기에 캐시에 레시피를 저장
+            cache.put(recipeId, recipe);
+        }
         return RecipeDetailResponse.from(recipe);
     }
 
