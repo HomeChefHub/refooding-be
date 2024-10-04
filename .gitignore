@@ -22,6 +22,8 @@ bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
 src/main/resources/application-secret.yml
+stress-test.yml
+*.csv
 
 ### IntelliJ IDEA ###
 .idea
